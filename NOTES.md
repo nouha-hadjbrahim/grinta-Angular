@@ -10,7 +10,13 @@ src/app/
 ├── sign-in/
 │   ├── sign-in.component.html  # Standalone login page (no header/footer)
 │   ├── sign-in.component.css   # Dark theme styling
-│   └── sign-in.component.ts
+│   └── sign-in.component.ts   # signIn() calls UserService.login()
+│
+├── services/
+│   └── user.service.ts         # HTTP calls to Spring Boot API (login, register, getAll, delete)
+│
+├── environments/
+│   └── environment.ts          # apiUrl = http://localhost:8000/api
 │
 └── core/
     ├── main/
@@ -43,3 +49,9 @@ src/app/
 - [x] `HeaderComponent` — navbar with GRINTA branding and nav links
 - [x] `FooterComponent` — simple dark footer with copyright
 - [x] `main.component.html` uses `<app-header>`, `<router-outlet>`, `<app-footer>`
+- [x] `HttpClientModule` + `FormsModule` added to `app.module.ts`
+- [x] `environment.ts` configured with `apiUrl = http://localhost:8000/api`
+- [x] `UserService` created — calls `/api/auth/sign-in`, `/api/auth/sign-up`, `/api/users`
+- [x] Sign-in form wired with `[(ngModel)]` and `signIn()` method
+- [x] On successful login → navigates to `/main`
+- [x] Error message displayed on failed login

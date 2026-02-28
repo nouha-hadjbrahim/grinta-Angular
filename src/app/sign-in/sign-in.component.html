@@ -28,14 +28,14 @@
     <label class="text-white mb-1">Email Address</label>
     <div class="input-group mb-3">
       <span class="input-icon"><i class="bi bi-envelope"></i></span>
-      <input type="email" class="form-control custom-input" placeholder="your.email@example.com" />
+      <input type="email" class="form-control custom-input" placeholder="your.email@example.com" [(ngModel)]="email" name="email" />
     </div>
 
     <!-- Password -->
     <label class="text-white mb-1">Password</label>
     <div class="input-group mb-3">
       <span class="input-icon"><i class="bi bi-lock"></i></span>
-      <input type="password" class="form-control custom-input" placeholder="Enter your password" />
+      <input type="password" class="form-control custom-input" placeholder="Enter your password" [(ngModel)]="password" name="password" />
     </div>
 
     <!-- Remember me & Forgot -->
@@ -47,8 +47,11 @@
       <a href="#" class="forgot-link">Forgot password?</a>
     </div>
 
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-danger py-2 mb-3">{{ errorMessage }}</div>
+
     <!-- Submit -->
-    <button class="btn btn-login w-100">Log In &rarr;</button>
+    <button class="btn btn-login w-100" (click)="signIn()">Log In &rarr;</button>
 
   </div>
 </div>
