@@ -1,0 +1,63 @@
+<!-- Hero Section -->
+<section class="hero-section text-center px-4 py-5">
+  <span class="badge-pill mb-4">⚡ Tunisia's #1 Fitness Platform</span>
+  <h1 class="hero-title">Your Energy,<br><span class="text-red">Your Community</span></h1>
+  <p class="hero-sub">Join thousands of athletes across Tunisia. Train smart, eat well, and connect with your tribe.</p>
+  <div class="d-flex justify-content-center gap-3 mt-4">
+    <button class="btn btn-red">Explore Events →</button>
+    <button class="btn btn-outline-light rounded-pill px-4">Start Training</button>
+  </div>
+  <div class="d-flex justify-content-center gap-5 mt-5">
+    <div><div class="stat-number">15K+</div><div class="stat-label">Active Members</div></div>
+    <div><div class="stat-number">250+</div><div class="stat-label">Events Monthly</div></div>
+    <div><div class="stat-number">50+</div><div class="stat-label">Partner Gyms</div></div>
+    <div><div class="stat-number">100+</div><div class="stat-label">Expert Coaches</div></div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="px-5 py-5">
+  <h2 class="text-center text-white fw-bold mb-2">Everything You Need to <span class="text-red">Succeed</span></h2>
+  <p class="text-center text-muted mb-5">A complete platform for your fitness journey</p>
+  <div class="row g-4">
+    <div class="col-md-3" *ngFor="let f of features">
+      <div class="feature-card p-4">
+        <div class="feature-icon mb-3"><i class="bi {{f.icon}}"></i></div>
+        <h5 class="text-white fw-bold">{{f.title}}</h5>
+        <p class="text-muted small">{{f.desc}}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why GRINTA Section -->
+<section class="px-5 py-5">
+  <div class="row align-items-center g-5">
+    <div class="col-md-6">
+      <h2 class="text-white fw-bold mb-3">Why <span class="text-red">GRINTA</span>?</h2>
+      <p class="text-muted mb-4">We're not just another fitness platform. GRINTA is built for the Tunisian community, bringing together the best gyms, coaches, events, and athletes in one place.</p>
+      <div class="d-flex flex-column gap-3">
+        <div class="d-flex align-items-center gap-3">
+          <div class="why-icon" style="background:#1a3a2a;"><i class="bi bi-bullseye" style="color:#28a745;"></i></div>
+          <div><div class="text-white fw-bold">Goal-Driven</div><div class="text-muted small">Track progress and crush your personal records</div></div>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <div class="why-icon" style="background:#2a2a1a;"><i class="bi bi-people" style="color:#ffc107;"></i></div>
+          <div><div class="text-white fw-bold">Community First</div><div class="text-muted small">Connect with like-minded athletes nationwide</div></div>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <div class="why-icon" style="background:#3a1a1a;"><i class="bi bi-graph-up-arrow" style="color:#ff1744;"></i></div>
+          <div><div class="text-white fw-bold">Proven Results</div><div class="text-muted small">Expert-designed programs that deliver</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="row g-3">
+        <div class="col-6"><div class="stat-card p-4"><div class="stat-big text-red">98%</div><div class="text-muted small">Member Satisfaction</div></div></div>
+        <div class="col-6"><div class="stat-card p-4"><div class="stat-big text-yellow">12K</div><div class="text-muted small">Daily Active Users</div></div></div>
+        <div class="col-6"><div class="stat-card p-4"><div class="stat-big text-green">4.9</div><div class="text-muted small">App Store Rating</div></div></div>
+        <div class="col-6"><div class="stat-card p-4"><div class="stat-big" style="color:#fff;">24/7</div><div class="text-muted small">Support Available</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>

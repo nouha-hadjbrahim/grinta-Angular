@@ -1,11 +1,22 @@
-<nav class="navbar navbar-dark bg-dark px-4">
+<nav class="navbar navbar-dark px-5 py-3 header-nav">
+  <!-- Brand -->
   <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-    <img src="assets/logo.png" width="30" alt="logo" onerror="this.style.display='none'" />
-    <span style="color:#ff1744; font-weight:900; letter-spacing:2px;">GRINTA</span>
+    <img src="assets/logo.png" width="35" alt="logo" onerror="this.style.display='none'" />
+    <span class="brand-name">GRINTA</span>
   </a>
-  <div class="d-flex gap-3">
-    <a href="#" class="nav-link text-white">Home</a>
-    <a href="#" class="nav-link text-white">Profile</a>
-    <a href="#" class="nav-link" style="color:#ff1744;">Logout</a>
+
+  <!-- Nav Links -->
+  <div class="d-flex gap-4 align-items-center">
+    <a routerLink="/main" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Home</a>
+    <a routerLink="/main/events" routerLinkActive="active-link" class="nav-link">Events</a>
+    <a routerLink="/main/workouts" routerLinkActive="active-link" class="nav-link">Workouts</a>
+    <a routerLink="/main/gyms" routerLinkActive="active-link" class="nav-link">Gyms</a>
+    <a routerLink="/main/coaching" routerLinkActive="active-link" class="nav-link">Coaching</a>
+    <a routerLink="/main/bookings" routerLinkActive="active-link" class="nav-link">Bookings</a>
+    <a routerLink="/main/nutrition" routerLinkActive="active-link" class="nav-link">Nutrition</a>
+    <a routerLink="/main/community" routerLinkActive="active-link" class="nav-link">Community</a>
   </div>
+
+  <!-- Log In / Logout -->
+  <button class="btn btn-login" (click)="logout()">Logout</button>
 </nav>

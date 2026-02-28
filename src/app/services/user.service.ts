@@ -1,12 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { environment } from '../environments/environment';
+import { AuthService } from './auth.service';
 
 export interface User {
   id?: number;
   email: string;
   password: string;
+}
+
+export interface AuthResponse {
+  token: string;
+  email: string;
+  id: number;
 }
 
 @Injectable({
@@ -17,10 +24,12 @@ export class UserService {
   private apiUrl = `${environment.apiUrl}/users`;
   private authUrl = `${environment.apiUrl}/auth`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
-  login(email: string, password: string): Observable<User> {
-    return this.http.post<User>(`${this.authUrl}/sign-in`, { email, password });
+  login(email: string, password: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.authUrl}/sign-in`, { email, password }).pipe(
+      tap(response => this.authService.setToken(response.token))
+    );
   }
 
   register(user: User): Observable<User> {

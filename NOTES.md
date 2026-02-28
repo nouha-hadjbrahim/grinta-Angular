@@ -3,55 +3,75 @@
 ## Project Structure
 ```
 src/app/
-├── app.component.html          # Root shell — contains only <router-outlet>
+├── app.component.html              # Root shell — contains only <router-outlet>
 ├── app.component.ts
-├── app-routing.module.ts       # All routes defined here
+├── app-routing.module.ts           # All routes defined here
 │
-├── sign-in/
-│   ├── sign-in.component.html  # Standalone login page (no header/footer)
-│   ├── sign-in.component.css   # Dark theme styling
-│   └── sign-in.component.ts   # signIn() calls UserService.login()
+├── guards/
+│   └── auth.guard.ts               # Protects /main routes (TODO: enable)
 │
 ├── services/
-│   └── user.service.ts         # HTTP calls to Spring Boot API (login, register, getAll, delete)
+│   ├── user.service.ts             # HTTP calls — sign-in, sign-up, getAll, delete
+│   └── auth.service.ts             # JWT token management (localStorage)
 │
 ├── environments/
-│   └── environment.ts          # apiUrl = http://localhost:8000/api
+│   └── environment.ts              # apiUrl = http://localhost:8000/api
 │
-└── core/
-    ├── main/
-    │   ├── main.component.html # Layout wrapper: header + <router-outlet> + footer
-    │   ├── main.component.css
-    │   └── main.component.ts
-    ├── header/
-    │   ├── header.component.html # Navbar with GRINTA brand + nav links
-    │   ├── header.component.css
-    │   └── header.component.ts
-    └── footer/
-        ├── footer.component.html # Footer with copyright
-        ├── footer.component.css
-        └── footer.component.ts
+├── core/
+│   ├── main/                       # Layout shell: header + <router-outlet> + footer
+│   ├── header/                     # Navbar with routerLink + logout
+│   └── footer/                     # Footer with links and social icons
+│
+└── features/
+    ├── home/
+    │   └── home-main/              # Hero, Features, Why GRINTA sections
+    ├── auth/
+    │   └── auth-main/              # Sign-in page
+    ├── events/
+    │   └── events-main/
+    ├── workouts/
+    │   └── workouts-main/
+    ├── gyms/
+    │   └── gyms-main/
+    ├── coaching/
+    │   └── coaching-main/
+    ├── bookings/
+    │   └── bookings-main/
+    ├── nutrition/
+    │   └── nutrition-main/
+    └── community/
+        └── community-main/
 ```
 
 ## Routing
-| Path       | Component       | Description                              |
-|------------|-----------------|------------------------------------------|
-| `/`        | —               | Redirects to `/sign-in`                  |
-| `/sign-in` | SignInComponent | Full page login (no header/footer)       |
-| `/main`    | MainComponent   | Layout shell with header & footer        |
-| `/main/**` | (children)      | Child pages rendered inside main layout  |
+| Path               | Component          | Description                              |
+|--------------------|--------------------|------------------------------------------|
+| `/`                | —                  | Redirects to `/sign-in`                  |
+| `/sign-in`         | SignInComponent    | Full page login (no header/footer)       |
+| `/main`            | MainComponent      | Layout shell with header & footer        |
+| `/main`            | HomeComponent      | Home page (default child)                |
+| `/main/events`     | EventsComponent    | Events page                              |
+| `/main/workouts`   | WorkoutsComponent  | Workouts page                            |
+| `/main/gyms`       | GymsComponent      | Gyms page                                |
+| `/main/coaching`   | CoachingComponent  | Coaching page                            |
+| `/main/bookings`   | BookingsComponent  | Bookings page                            |
+| `/main/nutrition`  | NutritionComponent | Nutrition page                           |
+| `/main/community`  | CommunityComponent | Community page                           |
 
 ## What's Done So Far
 - [x] Bootstrap 5 + Bootstrap Icons installed via npm and configured in `angular.json`
-- [x] Sign-in page designed (dark theme, email/password inputs, Google/Facebook buttons)
+- [x] Sign-in page designed (dark theme, email/password inputs)
 - [x] Routing set up with default redirect to `/sign-in`
-- [x] `MainComponent` created as the authenticated layout shell
-- [x] `HeaderComponent` — navbar with GRINTA branding and nav links
-- [x] `FooterComponent` — simple dark footer with copyright
-- [x] `main.component.html` uses `<app-header>`, `<router-outlet>`, `<app-footer>`
-- [x] `HttpClientModule` + `FormsModule` added to `app.module.ts`
+- [x] `MainComponent` — layout shell with header, router-outlet, footer
+- [x] `HeaderComponent` — navbar with `routerLink`, `routerLinkActive`, logout button
+- [x] `FooterComponent` — full dark footer with links, social icons, contact
+- [x] `HttpClientModule` + `FormsModule` + `CommonModule` added to `app.module.ts`
 - [x] `environment.ts` configured with `apiUrl = http://localhost:8000/api`
-- [x] `UserService` created — calls `/api/auth/sign-in`, `/api/auth/sign-up`, `/api/users`
-- [x] Sign-in form wired with `[(ngModel)]` and `signIn()` method
-- [x] On successful login → navigates to `/main`
-- [x] Error message displayed on failed login
+- [x] `UserService` — calls `/api/auth/sign-in`, `/api/auth/sign-up`, `/api/users`
+- [x] `AuthService` — stores/retrieves/removes JWT token from `localStorage`
+- [x] JWT token received on sign-in → stored in `localStorage` automatically via `tap()`
+- [x] Sign-in form wired with `[(ngModel)]` → on success navigates to `/main`
+- [x] Logout clears token from `localStorage` and redirects to `/sign-in`
+- [x] `AuthGuard` created (commented out — TODO: enable when ready)
+- [x] All feature components created and wired to their routes
+- [x] Home page sections: Hero, Features cards, Why GRINTA stats
