@@ -1,1 +1,118 @@
-<p>bookings works!</p>
+<div class="container">
+
+  <!-- LEFT -->
+  <div class="left">
+
+    <h1 class="title">
+      Book a <span>Venue</span>
+    </h1>
+
+    <p class="subtitle">
+      Reserve sports terrains and facilities across Tunisia
+    </p>
+
+    <!-- STEP 1 -->
+    <h3 class="step">Step 1: Select Venue</h3>
+
+    <div class="cards">
+      <div class="card"
+           *ngFor="let t of terrains"
+           (click)="selectTerrain(t)"
+           [class.active]="selectedTerrain?.id === t.id">
+
+        <h3>{{ t.name }}</h3>
+        <p class="type">{{ t.type }}</p>
+        <p class="location">📍 {{ t.location }}</p>
+        <p class="price">{{ t.price }} TND</p>
+
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <h3 class="step">Step 2: Select Date</h3>
+
+    <input type="date"
+           [(ngModel)]="selectedDate"
+           class="date-input">
+
+    <!-- STEP 3 -->
+    <h3 class="step">Step 3: Select Time</h3>
+
+    <div class="times">
+      <button 
+        *ngFor="let t of times"
+        (click)="selectedTime = t"
+        [class.active]="selectedTime === t">
+        {{ t }}
+      </button>
+    </div>
+
+  </div>
+
+  <!-- RIGHT -->
+  <div class="summary">
+
+    <h2>Booking Summary</h2>
+
+    <div class="line">
+      <span>Venue</span>
+      <strong>{{ selectedTerrain?.name || '-' }}</strong>
+    </div>
+
+    <div class="line">
+      <span>Date</span>
+      <strong>
+        {{ selectedDate ? (selectedDate | date:'mediumDate') : '-' }}
+      </strong>
+    </div>
+
+    <div class="line">
+      <span>Time</span>
+      <strong>{{ selectedTime || '-' }}</strong>
+    </div>
+
+    <div class="line">
+      <span>Duration</span>
+      <strong>1 hour</strong>
+    </div>
+
+    <div class="line">
+      <span>Capacity</span>
+      <strong *ngIf="selectedTerrain; else empty">
+        {{ selectedTerrain.capacity }} players
+      </strong>
+
+      <ng-template #empty>-</ng-template>
+    </div>
+
+    <hr>
+
+    <div class="line">
+      <span>Subtotal</span>
+      <strong>
+        {{ selectedTerrain ? selectedTerrain.price + ' TND' : '-' }}
+      </strong>
+    </div>
+
+    <div class="line">
+      <span>Booking Fee</span>
+      <strong>5 TND</strong>
+    </div>
+
+    <div class="line total">
+      <span>Total</span>
+      <strong>
+        {{ selectedTerrain ? (selectedTerrain.price + 5) : '-' }}
+      </strong>
+    </div>
+
+    <!-- 🔥 IMPORTANT -->
+    <button class="confirm"
+            [disabled]="!selectedTerrain || !selectedDate || !selectedTime"
+            (click)="confirmBooking()">
+      Confirm Booking
+    </button>
+
+  </div>
+
+</div>

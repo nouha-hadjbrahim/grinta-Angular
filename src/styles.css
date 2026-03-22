@@ -1,1 +1,57 @@
-/* You can add global styles to this file, and also import other style files */
+.booking-container {
+  display: flex;
+  gap: 40px;
+  padding: 30px;
+  color: white;
+}
+
+.booking-left {
+  flex: 2;
+}
+
+.booking-right {
+  flex: 1;
+  background: #1f2933;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.venues {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.venue-card {
+  background: #2a2f35;
+  padding: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.venue-card.active {
+  border: 2px solid red;
+}
+
+.times button {
+  margin: 5px;
+  padding: 10px 15px;
+  background: #2a2f35;
+  border: none;
+  color: white;
+  border-radius: 8px;
+}
+
+.times button.active {
+  background: red;
+}
+
+.confirm-btn {
+  width: 100%;
+  padding: 12px;
+  background: green;
+  border: none;
+  border-radius: 8px;
+  margin-top: 20px;
+}
