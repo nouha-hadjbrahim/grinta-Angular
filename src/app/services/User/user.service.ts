@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { environment } from '../environments/environment';
+import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 
 export interface User {
@@ -28,7 +28,10 @@ export class UserService {
 
   login(email: string, password: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.authUrl}/sign-in`, { email, password }).pipe(
-      tap(response => this.authService.setToken(response.token))
+      tap(response => {
+        this.authService.setToken(response.token);
+        this.authService.setUserData(response.id, response.email);
+      })
     );
   }
 
