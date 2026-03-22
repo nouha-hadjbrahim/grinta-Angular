@@ -3,6 +3,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
+
+
+
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -41,12 +47,15 @@ import { WorkoutsComponent } from './features/workouts/workouts-main/workouts.co
     WorkoutsComponent,
     NutritionComponent,
     CommunityComponent,
+    
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    CommonModule
+    CommonModule,  
+    HttpClientModule,
+    RouterModule
   ],
     providers: [
     provideHttpClient(withInterceptorsFromDi())

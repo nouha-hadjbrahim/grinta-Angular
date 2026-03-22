@@ -1,0 +1,210 @@
+/* BACKGROUND */
+body {
+  background: radial-gradient(circle at top, #111 0%, #000 100%);
+}
+
+/* CONTAINER */
+.container {
+  display: flex;
+  gap: 60px;
+  padding: 60px;
+  color: white;
+}
+
+/* LEFT */
+.left {
+  flex: 2;
+}
+
+/* TITLE */
+.title {
+  font-size: 42px;
+  font-weight: 700;
+}
+
+.title span {
+  color: #ff2d2d;
+}
+
+.subtitle {
+  color: #aaa;
+  margin-bottom: 40px;
+}
+
+/* STEP */
+.step {
+  margin: 30px 0 15px;
+  font-size: 18px;
+}
+
+/* CARDS GRID */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* CARD */
+.card {
+  position: relative;
+  background: #1f2a36;
+  padding: 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+  color: white;
+}
+
+/* glow effect */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(255,0,0,0.2), transparent);
+  opacity: 0;
+  transition: 0.3s;
+  border-radius: 12px;
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+/* hover */
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 20px rgba(255,0,0,0.4);
+}
+
+/* ACTIVE */
+.card.active {
+  border: 2px solid red;
+  background: #1f2a36; /* 🔥 FIX fond blanc */
+  box-shadow: 0 0 20px rgba(255,0,0,0.6);
+}
+
+/* TEXT */
+.type {
+  color: #ff2d2d;
+  font-weight: 600;
+}
+
+.location {
+  color: #aaa;
+  font-size: 13px;
+}
+
+/* PRICE */
+.price {
+  color: #ff2d2d;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* DATE */
+.date-input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #1f2a37;
+  color: white;
+}
+
+/* TIMES */
+.times {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.times button {
+  width: 90px;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #1f2a37;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* hover time */
+.times button:hover {
+  background: #ff2d2d;
+}
+
+/* active time */
+.times button.active {
+  background: #ff2d2d;
+  box-shadow: 0 0 10px red;
+}
+
+/* SUMMARY */
+.summary {
+  flex: 1;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  padding: 30px;
+  border-radius: 20px;
+  color: white;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+  transition: 0.3s;
+}
+
+.summary:hover {
+  transform: scale(1.02);
+}
+
+/* TEXT LINES */
+.line {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 0;
+}
+
+/* TOTAL */
+.total {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* separator */
+hr {
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.3);
+  margin: 15px 0;
+}
+
+/* BUTTON */
+.confirm {
+  width: 100%;
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 10px;
+  border: none;
+  background: white;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.confirm:hover {
+  background: #eee;
+  transform: scale(1.05);
+}
+
+/* animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: fadeIn 0.4s ease;
+}
