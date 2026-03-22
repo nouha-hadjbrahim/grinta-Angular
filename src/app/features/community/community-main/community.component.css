@@ -1,0 +1,617 @@
+.community-container {
+  padding: 40px;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Colors */
+.text-yellow { color: #fdb813; }
+.text-red { color: #ff1744; }
+.text-green { color: #4caf50; }
+.text-white { color: #fff; }
+.text-silver { color: #e0e0e0; }
+.text-bronze { color: #cd7f32; }
+
+.bg-red { background-color: #ff1744; }
+.bg-pink { background-color: #ff4081; }
+
+.fill-yellow { background-color: #fdb813; }
+
+.icon-yellow i { color: #fdb813; }
+.icon-white i { color: #fff; }
+
+/* Hero Section */
+.community-hero {
+  margin-bottom: 40px;
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.hero-subtitle {
+  color: #aaa;
+  font-size: 1.2rem;
+}
+
+/* Layout Grid */
+.community-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+}
+
+/* Common Text/Headers */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.feed-header {
+  margin-top: 40px;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: 10px;
+}
+
+.filter-pill {
+  background-color: #252525;
+  color: #aaa;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.filter-pill.active {
+  background-color: #fdb813;
+  color: #111;
+}
+
+/* Challenges Grid */
+.challenges-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.challenge-card {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #333;
+}
+
+.challenge-card.trending {
+  border: 1px solid #fdb813;
+}
+
+.trending-badge {
+  color: #fdb813;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-transform: uppercase;
+}
+
+.challenge-main {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.challenge-icon {
+  width: 48px;
+  height: 48px;
+  background-color: #2a2a2a;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.challenge-info h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 5px 0;
+}
+
+.challenge-info p {
+  color: #999;
+  font-size: 0.85rem;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.participants {
+  color: #888;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.challenge-progress-section {
+  margin-bottom: 20px;
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  color: #aaa;
+}
+
+.progress-count {
+  font-weight: 700;
+}
+
+.progress-bar {
+  height: 6px;
+  background-color: #333;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 3px;
+}
+
+.challenge-footer {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #333;
+  padding-top: 15px;
+  margin-top: auto;
+}
+
+.reward {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.reward i {
+  font-size: 1.2rem;
+}
+
+.reward .label, .time-left .label {
+  display: block;
+  font-size: 0.75rem;
+  color: #888;
+  margin-bottom: 2px;
+}
+
+.reward .value {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.time-left {
+  text-align: right;
+}
+
+.time-left .value {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* Feed List */
+.btn-share {
+  background-color: #ff1744;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: opacity 0.3s;
+}
+
+.btn-share:hover {
+  opacity: 0.9;
+}
+
+.feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.post-card {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #333;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.user-info h4 {
+  margin: 0 0 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.badge-pr {
+  background-color: #443720;
+  color: #fdb813;
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid #fdb813;
+}
+
+.time-ago {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.post-content p {
+  color: #ddd;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 250px;
+  background-color: #3b2029; /* Dark reddish placeholder */
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: #664149;
+  margin-bottom: 15px;
+}
+
+.post-actions {
+  display: flex;
+  gap: 20px;
+  border-top: 1px solid #333;
+  padding-top: 15px;
+}
+
+.post-actions button {
+  background: none;
+  border: none;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: color 0.3s;
+}
+
+.post-actions button:hover {
+  color: #fff;
+}
+
+.active-like {
+  color: #ff1744 !important;
+}
+
+/* Comments Section */
+.comments-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #333;
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+/* Custom Scrollbar for Comments */
+.comments-list::-webkit-scrollbar {
+  width: 6px;
+}
+.comments-list::-webkit-scrollbar-thumb {
+  background-color: #444; 
+  border-radius: 10px;
+}
+
+.comment-item {
+  display: flex;
+  gap: 12px;
+}
+
+.comment-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #444;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.comment-body {
+  background-color: #2a2a2a;
+  padding: 10px 15px;
+  border-radius: 12px;
+  flex: 1;
+}
+
+.comment-author {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #ddd;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.comment-text {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.no-comments {
+  color: #888;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.comment-input-area {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.comment-input {
+  flex: 1;
+  background-color: #252525;
+  border: 1px solid #444;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 20px;
+  font-family: inherit;
+  outline: none;
+}
+
+.comment-input:focus {
+  border-color: #fdb813;
+}
+
+.btn-send {
+  background-color: #ff1744;
+  color: #fff;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.btn-send:hover {
+  opacity: 0.8;
+}
+
+/* Sidebar Elements */
+.sidebar-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sidebar-card {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #333;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+.card-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.card-header-flex .card-title {
+  margin-bottom: 0;
+}
+
+.view-all {
+  font-size: 0.85rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* Stats */
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.stat-row:last-child {
+  border-bottom: none;
+}
+
+.stat-label {
+  color: #999;
+}
+
+.stat-value {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* Leaderboard */
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  background-color: #252525;
+  padding: 10px 15px;
+  border-radius: 8px;
+}
+
+.rank {
+  width: 30px;
+  font-size: 1.2rem;
+}
+
+.lb-user {
+  flex: 1;
+}
+
+.lb-user h4 {
+  margin: 0 0 2px 0;
+  font-size: 0.95rem;
+}
+
+.lb-user span {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.lb-position {
+  font-weight: 700;
+  color: #666;
+}
+
+.btn-dark-full {
+  width: 100%;
+  background-color: #2a2a2a;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-dark-full:hover {
+  background-color: #333;
+}
+
+/* Suggested Groups */
+.group-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.group-info h4 {
+  margin: 0 0 4px 0;
+  font-size: 0.95rem;
+  color: #ddd;
+}
+
+.group-info span {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.btn-join {
+  background-color: #ff1744;
+  color: white;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 15px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-join:hover {
+  background-color: #e0153c;
+}
+
+/* General Layout adjustments for responsiveness */
+@media (max-width: 1024px) {
+  .community-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .challenges-grid {
+    grid-template-columns: 1fr;
+  }
+}
