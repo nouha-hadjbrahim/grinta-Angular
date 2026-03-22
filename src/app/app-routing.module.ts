@@ -4,6 +4,9 @@ import { SignInComponent } from './sign-in/sign-in.component';
 import { MainComponent } from './core/main/main.component';
 import { HomeComponent } from './features/home/home-main/home.component';
 import { EventsComponent } from './features/events/events-main/events.component';
+import { EventCreateComponent } from './features/events/event-create/event-create.component';
+import { EventEditComponent } from './features/events/event-edit/event-edit.component';
+import { EventDetailComponent } from './features/events/event-detail/event-detail.component';
 import { GymsComponent } from './features/gyms/gyms-main/gyms.component';
 import { CoachingComponent } from './features/coaching/coaching-main/coaching.component';
 import { BookingsComponent } from './features/bookings/bookings-main/bookings.component';
@@ -21,6 +24,9 @@ const routes: Routes = [
     children: [
       { path: '', component: HomeComponent },
       { path: 'events', component: EventsComponent },
+      { path: 'events/create', component: EventCreateComponent },
+      { path: 'events/edit/:id', component: EventEditComponent },
+      { path: 'events/:id', component: EventDetailComponent },
       { path: 'workouts', component: WorkoutsComponent },
       { path: 'gyms', component: GymsComponent },
       { path: 'coaching', component: CoachingComponent },

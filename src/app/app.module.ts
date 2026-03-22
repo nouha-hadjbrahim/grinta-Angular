@@ -18,6 +18,9 @@ import { HomeComponent } from './features/home/home-main/home.component';
 import { HeaderComponent } from './core/header/header.component';
 import { FooterComponent } from './core/footer/footer.component';
 import { EventsComponent } from './features/events/events-main/events.component';
+import { EventCreateComponent } from './features/events/event-create/event-create.component';
+import { EventEditComponent } from './features/events/event-edit/event-edit.component';
+import { EventDetailComponent } from './features/events/event-detail/event-detail.component';
 import { GymsComponent } from './features/gyms/gyms-main/gyms.component';
 import { CoachingComponent } from './features/coaching/coaching-main/coaching.component';
 import { BookingsComponent } from './features/bookings/bookings-main/bookings.component';
@@ -35,6 +38,9 @@ import { WorkoutsComponent } from './features/workouts/workouts-main/workouts.co
     HeaderComponent,
     FooterComponent,
     EventsComponent,
+    EventCreateComponent,
+    EventEditComponent,
+    EventDetailComponent,
     GymsComponent,
     CoachingComponent,
     BookingsComponent,
