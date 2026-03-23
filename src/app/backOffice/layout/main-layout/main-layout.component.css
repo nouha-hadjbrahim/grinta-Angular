@@ -1,0 +1,38 @@
+.admin-layout {
+  display: flex;
+  height: 100vh;
+  background-color: #f7f7f7;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 250px;
+  background-color: #f7f7f7;
+}
+
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 30px;
+  background-color: #f7f7f7;
+}
+
+/* Scrollbar styling */
+.content-area::-webkit-scrollbar {
+  width: 10px;
+}
+
+.content-area::-webkit-scrollbar-track {
+  background: #e8e8e8;
+}
+
+.content-area::-webkit-scrollbar-thumb {
+  background: #999;
+  border-radius: 5px;
+}
+
+.content-area::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}

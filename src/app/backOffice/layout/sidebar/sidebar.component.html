@@ -1,0 +1,20 @@
+<div class="sidebar">
+  <div class="sidebar-header">
+    <img src="assets/logo.png" alt="Grinta Logo" class="sidebar-logo">
+    <h3 class="app-title">GRINTA</h3>
+  </div>
+  <nav class="sidebar-nav">
+    <ul class="nav-list">
+      <li *ngFor="let item of menuItems" 
+          [class.active]="isActive(item.route)"
+          class="nav-item">
+        <a [routerLink]="item.route" 
+           class="nav-link"
+           [class.active-link]="isActive(item.route)">
+          <i [class]="item.icon"></i>
+          <span class="nav-label">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>

@@ -1,0 +1,155 @@
+<div *ngIf="isOpen" class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <!-- Close Button -->
+    <button class="close-btn" (click)="closeModal()">✕</button>
+
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="avatar-section">
+        <div class="avatar-container">
+          <img
+            [src]="photoPreview || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 120 120%22%3E%3Crect fill=%22%23e0e0e0%22 width=%22120%22 height=%22120%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-size=%2214%22 fill=%22%23999%22%3ENo Photo%3C/text%3E%3C/svg%3E'"
+            alt="User Photo"
+            class="avatar-image"
+          />
+          <label class="edit-icon-label" for="photoInput" title="Upload Photo">
+            <span class="edit-icon">✎</span>
+          </label>
+          <input
+            type="file"
+            id="photoInput"
+            class="hidden-input"
+            accept="image/*"
+            (change)="onPhotoSelected($event)"
+          />
+        </div>
+        <div class="user-info">
+          <h2 class="user-name">{{ user?.name || 'User' }}</h2>
+          <p class="user-email">{{ user?.email || 'email@example.com' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="updateForm" class="form-container" (ngSubmit)="onSubmit()">
+      <!-- Name Field -->
+      <div class="form-group">
+        <label for="nameInput" class="form-label">Name</label>
+        <input
+          type="text"
+          id="nameInput"
+          class="form-input"
+          formControlName="name"
+          placeholder="Enter full name"
+        />
+        <div
+          *ngIf="
+            updateForm.get('name')?.invalid &&
+            updateForm.get('name')?.touched
+          "
+          class="error-text"
+        >
+          Name is required
+        </div>
+      </div>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="emailInput" class="form-label">Email Account</label>
+        <input
+          type="email"
+          id="emailInput"
+          class="form-input"
+          formControlName="email"
+          placeholder="Enter email address"
+        />
+        <div
+          *ngIf="
+            updateForm.get('email')?.invalid &&
+            updateForm.get('email')?.touched
+          "
+          class="error-text"
+        >
+          <span *ngIf="updateForm.get('email')?.errors?.['required']"
+            >Email is required</span
+          >
+          <span *ngIf="updateForm.get('email')?.errors?.['email']"
+            >Please enter a valid email</span
+          >
+        </div>
+      </div>
+
+      <!-- Phone Field -->
+      <div class="form-group">
+        <label for="phoneInput" class="form-label">Mobile Number</label>
+        <input
+          type="tel"
+          id="phoneInput"
+          class="form-input"
+          formControlName="phoneNumber"
+          placeholder="Enter phone number"
+        />
+        <div
+          *ngIf="
+            updateForm.get('phoneNumber')?.invalid &&
+            updateForm.get('phoneNumber')?.touched
+          "
+          class="error-text"
+        >
+          Phone number is required
+        </div>
+      </div>
+
+      <!-- Role Dropdown -->
+      <div class="form-group">
+        <label for="roleSelect" class="form-label">Role</label>
+        <select
+          id="roleSelect"
+          class="form-input form-select"
+          formControlName="role"
+        >
+          <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+        </select>
+      </div>
+
+      <!-- Status Dropdown -->
+      <div class="form-group">
+        <label for="statusSelect" class="form-label">Status</label>
+        <select
+          id="statusSelect"
+          class="form-input form-select"
+          formControlName="status"
+        >
+          <option *ngFor="let status of statuses" [value]="status">
+            {{ status }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Success Message -->
+      <div *ngIf="successMessage" class="success-message">
+        ✓ {{ successMessage }}
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="error-message">
+        ✗ {{ errorMessage }}
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="closeModal()">
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn-save"
+          [disabled]="!isFormValid() || loading"
+        >
+          <span *ngIf="!loading">Save Changes</span>
+          <span *ngIf="loading" class="spinner-small"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

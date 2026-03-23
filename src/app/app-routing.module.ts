@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SignInComponent } from './sign-in/sign-in.component';
+import { SignUpComponent } from './sign-up/sign-up.component';
 import { MainComponent } from './core/main/main.component';
 import { HomeComponent } from './features/home/home-main/home.component';
 import { EventsComponent } from './features/events/events-main/events.component';
@@ -13,16 +14,26 @@ import { BookingsComponent } from './features/bookings/bookings-main/bookings.co
 import { WorkoutsComponent } from './features/workouts/workouts-main/workouts.component';
 import { NutritionComponent } from './features/nutrition/nutrition-main/nutrition.component';
 import { CommunityComponent } from './features/community/community-main/community.component';
+<<<<<<< HEAD
 // ✅ Nouveaux imports payment
 import { PaymentComponent } from './features/bookings/payment/payment.component';
 import { PaymentSuccessComponent } from './features/bookings/payment-success/payment-success.component';
 import { PaymentFailComponent } from './features/bookings/payment-fail/payment-fail.component';
+=======
+import { AuthGuard } from './guards/auth.guard';
+import { RoleGuard } from './guards/role.guard';
+>>>>>>> 0fcf05b2a640090e43128f51f2c74c3d5fe0bf34
 
 const routes: Routes = [
   { path: '', redirectTo: 'sign-in', pathMatch: 'full' },
   { path: 'sign-in', component: SignInComponent },
+  { path: 'sign-up', component: SignUpComponent },
   {
     path: 'main', component: MainComponent,
+<<<<<<< HEAD
+=======
+    canActivate: [AuthGuard],
+>>>>>>> 0fcf05b2a640090e43128f51f2c74c3d5fe0bf34
     children: [
       { path: '', component: HomeComponent },
       { path: 'events', component: EventsComponent },
@@ -40,6 +51,11 @@ const routes: Routes = [
       { path: 'nutrition', component: NutritionComponent },
       { path: 'community', component: CommunityComponent },
     ]
+  },
+  {
+    path: 'admin',
+    canActivate: [RoleGuard],
+    loadChildren: () => import('./backOffice/backoffice.module').then(m => m.BackofficeModule)
   }
 ];
 

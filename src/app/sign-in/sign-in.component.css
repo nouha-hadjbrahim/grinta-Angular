@@ -2,6 +2,10 @@
   background-color: #1a1a1a;
 }
 
+.text-muted {
+  color: #a8a8a8 !important;
+}
+
 .brand-name {
   color: #ff1744;
   font-size: 1.8rem;
@@ -59,8 +63,9 @@
   top: 50%;
   transform: translateY(-50%);
   color: #888;
-  z-index: 5;
+  z-index: 10;
   font-size: 1rem;
+  pointer-events: none;
 }
 
 .custom-input {
@@ -70,6 +75,7 @@
   color: #fff;
   padding-left: 38px;
   height: 48px;
+  position: relative;
 }
 
 .custom-input::placeholder {
@@ -106,4 +112,16 @@
 .btn-login:hover {
   background-color: #e0102f;
   color: #fff;
+}
+
+.signup-link {
+  color: #ff1744;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.signup-link:hover {
+  color: #ff6b7a;
+  text-decoration: underline;
 }

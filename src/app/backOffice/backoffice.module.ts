@@ -1,0 +1,68 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { BackofficeRoutingModule } from './backoffice-routing.module';
+
+// Layout Components
+import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
+import { SidebarComponent } from './layout/sidebar/sidebar.component';
+import { NavbarComponent } from './layout/navbar/navbar.component';
+
+// Feature Components
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { UsersComponent } from './users/users.component';
+import { UpdateUserComponent } from './users/update-user/update-user.component';
+import { EventsComponent } from './events/events.component';
+import { WorkoutsComponent } from './workouts/workouts.component';
+import { GymsComponent } from './gyms/gyms.component';
+import { TrainingComponent } from './training/training.component';
+import { NutritionComponent } from './nutrition/nutrition.component';
+import { CommunityComponent } from './community/community.component';
+
+// Shared Components
+import { TableComponent } from './shared/components/table/table.component';
+
+// Services
+import { UserService } from './shared/services/user.service';
+import { EventService } from './shared/services/event.service';
+import { WorkoutService } from './shared/services/workout.service';
+import { GymService } from './shared/services/gym.service';
+import { TrainingService } from './shared/services/training.service';
+import { NutritionService } from './shared/services/nutrition.service';
+import { CommunityService } from './shared/services/community.service';
+
+@NgModule({
+  declarations: [
+    // Layout
+    MainLayoutComponent,
+    SidebarComponent,
+    NavbarComponent,
+    // Features
+    DashboardComponent,
+    EventsComponent,
+    WorkoutsComponent,
+    GymsComponent,
+    TrainingComponent,
+    NutritionComponent,
+    CommunityComponent,
+    // Shared
+    TableComponent
+  ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    BackofficeRoutingModule,
+    UsersComponent,
+    UpdateUserComponent
+  ],
+  providers: [
+    UserService,
+    EventService,
+    WorkoutService,
+    GymService,
+    TrainingService,
+    NutritionService,
+    CommunityService
+  ]
+})
+export class BackofficeModule { }
