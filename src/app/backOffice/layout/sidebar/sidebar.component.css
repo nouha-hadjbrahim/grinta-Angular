@@ -1,0 +1,104 @@
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: #1e1e1e;
+  color: #ffffff;
+  padding: 0;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+  z-index: 1000;
+  border-right: 1px solid #1e1e1e;
+}
+
+.sidebar-header {
+  padding: 15px;
+  border-bottom: 1px solid #333;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar-logo {
+  width: 42px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.app-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: #e63946;
+  letter-spacing: 2px;
+}
+
+.sidebar-nav {
+  padding: 20px 0;
+}
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  margin: 5px 0;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  color: #a8a8a8;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+}
+
+.nav-link:hover {
+  background-color: rgba(230, 57, 70, 0.1);
+  color: #ffffff;
+}
+
+.nav-link.active-link {
+  background-color: rgba(230, 57, 70, 0.15);
+  border-left-color: #e63946;
+  color: #e63946;
+}
+
+.nav-link i {
+  width: 24px;
+  height: 24px;
+  margin-right: 15px;
+  font-size: 18px;
+}
+
+.nav-label {
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Scrollbar styling */
+.sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: #2a2a2a;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
