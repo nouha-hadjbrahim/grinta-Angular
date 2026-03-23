@@ -1,20 +1,13 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-<<<<<<< HEAD
-import { FormsModule } from '@angular/forms';
-=======
-import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
->>>>>>> 0fcf05b2a640090e43128f51f2c74c3d5fe0bf34
 import { CommonModule } from '@angular/common';
-import { AuthInterceptor } from './services/auth.interceptor';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SignInComponent } from './sign-in/sign-in.component';
-import { SignUpComponent } from './sign-up/sign-up.component';
 import { MainComponent } from './core/main/main.component';
 import { HomeComponent } from './features/home/home-main/home.component';
 import { HeaderComponent } from './core/header/header.component';
@@ -37,7 +30,6 @@ import { PaymentFailComponent } from './features/bookings/payment-fail/payment-f
   declarations: [
     AppComponent,
     SignInComponent,
-    SignUpComponent,
     MainComponent,
     HomeComponent,
     HeaderComponent,
@@ -60,27 +52,14 @@ import { PaymentFailComponent } from './features/bookings/payment-fail/payment-f
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-<<<<<<< HEAD
+    ReactiveFormsModule,
     CommonModule,
     HttpClientModule,
     RouterModule
   ],
-  providers: [],
-=======
-    ReactiveFormsModule,
-    CommonModule,  
-    HttpClientModule,
-    RouterModule
+  providers: [
+    provideHttpClient(withInterceptorsFromDi())
   ],
-    providers: [
-    provideHttpClient(withInterceptorsFromDi()),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    }
-  ],
->>>>>>> 0fcf05b2a640090e43128f51f2c74c3d5fe0bf34
   bootstrap: [AppComponent]
 })
 export class AppModule { }
