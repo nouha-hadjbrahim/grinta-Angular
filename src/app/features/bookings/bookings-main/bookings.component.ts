@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';                           // ✅
 import { BookingService } from '../../../services/booking.service';
 import { AuthService } from '../../../services/User/auth.service';
 
@@ -17,7 +18,6 @@ export class BookingsComponent implements OnInit {
   selectedDate: string = '';
   selectedTime: string = '';
 
-  // ✅ 3 onglets
   activeTab: 'book' | 'mybookings' | 'history' = 'book';
   editingId: number | null = null;
 
@@ -29,7 +29,8 @@ export class BookingsComponent implements OnInit {
 
   constructor(
     private bookingService: BookingService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router    // ✅ ajouté
   ) {}
 
   ngOnInit(): void {
@@ -38,19 +39,15 @@ export class BookingsComponent implements OnInit {
     this.loadMyBookings();
   }
 
-  // ── GETTERS ───────────────────────────────────────
-
-  // ✅ Uniquement CONFIRMED
   get activeBookings(): any[] {
     return this.myBookings.filter(b => b.status === 'CONFIRMED');
   }
 
-  // ✅ Uniquement CANCELLED
   get historyBookings(): any[] {
-    return this.myBookings.filter(b => b.status === 'CANCELLED');
+    return this.myBookings.filter(b =>
+      b.status === 'CANCELLED' || b.status === 'PENDING'
+    );
   }
-
-  // ── LOAD ──────────────────────────────────────────
 
   loadTerrains(): void {
     this.bookingService.getTerrains().subscribe(data => {
@@ -64,8 +61,6 @@ export class BookingsComponent implements OnInit {
       this.myBookings = data;
     });
   }
-
-  // ── SÉLECTION ─────────────────────────────────────
 
   selectTerrain(t: any): void {
     if (this.getTerrainStatus(t) === 'full') {
@@ -99,8 +94,6 @@ export class BookingsComponent implements OnInit {
       });
   }
 
-  // ── CREATE ────────────────────────────────────────
-
   confirmBooking(): void {
     if (!this.selectedTerrain || !this.selectedDate || !this.selectedTime) {
       this.showToast('Veuillez compléter toutes les étapes', 'error');
@@ -113,13 +106,19 @@ export class BookingsComponent implements OnInit {
       time: this.selectedTime
     };
     this.bookingService.createBooking(payload).subscribe({
-      next: () => {
-        this.showToast('✅ Réservation confirmée !', 'success');
-        this.resetForm();
-        this.loadTerrains();
-        this.loadMyBookings();
+      next: (booking: any) => {
+        // ✅ Naviguer vers la page paiement
+        this.router.navigate(['/main/bookings/payment'], {
+          state: {
+            bookingId: booking.id,
+            terrain: this.selectedTerrain,
+            date: this.selectedDate,
+            time: this.selectedTime,
+            amount: this.subtotal + 5
+          }
+        });
       },
-      error: (err) => {
+      error: (err: any) => {
         if (err.status === 409) {
           const msg = err.error?.error || 'Ce créneau est déjà réservé !';
           this.showToast('❌ ' + msg, 'error');
@@ -129,8 +128,6 @@ export class BookingsComponent implements OnInit {
       }
     });
   }
-
-  // ── EDIT ──────────────────────────────────────────
 
   startEdit(booking: any): void {
     const bookingDate = new Date(booking.date);
@@ -161,7 +158,7 @@ export class BookingsComponent implements OnInit {
         this.resetForm();
         this.loadMyBookings();
       },
-      error: (err) => {
+      error: (err: any) => {
         if (err.status === 409) {
           this.showToast('❌ Ce créneau est déjà réservé !', 'error');
         } else if (err.status === 400) {
@@ -172,8 +169,6 @@ export class BookingsComponent implements OnInit {
       }
     });
   }
-
-  // ── CANCEL ────────────────────────────────────────
 
   openCancelModal(id: number): void {
     this.bookingToCancel = id;
@@ -201,14 +196,10 @@ export class BookingsComponent implements OnInit {
     this.bookingToCancel = null;
   }
 
-  // ── TOAST ─────────────────────────────────────────
-
   showToast(message: string, type: 'success' | 'error'): void {
     this.toast = { message, type };
     setTimeout(() => this.toast = null, 3500);
   }
-
-  // ── HELPERS ───────────────────────────────────────
 
   resetForm(): void {
     this.selectedTerrain = null;

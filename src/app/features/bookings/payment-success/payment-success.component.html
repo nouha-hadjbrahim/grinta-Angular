@@ -1,0 +1,70 @@
+<div class="success-wrapper">
+
+  <div *ngIf="loading"
+       style="color:white; text-align:center; padding:60px">
+    <p style="font-size:20px">⏳ Vérification du paiement...</p>
+  </div>
+
+  <div *ngIf="error && !loading" class="result-card">
+    <div style="font-size:60px; margin-bottom:16px">❌</div>
+    <h1>Paiement <span style="color:#ff2d2d">Échoué</span></h1>
+    <p style="color:#aaa; margin:12px 0 24px">
+      Votre réservation a été annulée automatiquement.
+    </p>
+    <button class="back-btn" (click)="goToBookings()">
+      🔄 Réessayer une réservation
+    </button>
+  </div>
+
+  <div *ngIf="receipt && !loading" class="result-card">
+    <div style="font-size:60px; margin-bottom:16px">✅</div>
+    <h1>Paiement <span style="color:#22c55e">Confirmé !</span></h1>
+    <p style="color:#aaa; margin-bottom:30px">
+      Votre réservation est confirmée
+    </p>
+
+    <div class="receipt-body">
+      <h3>🧾 Reçu de paiement</h3>
+
+      <div class="receipt-row">
+        <span>N° Réservation</span>
+        <strong>#{{ receipt.bookingId }}</strong>
+      </div>
+      <div class="receipt-row">
+        <span>Terrain</span>
+        <strong>{{ receipt.terrain }}</strong>
+      </div>
+      <div class="receipt-row">
+        <span>Date</span>
+        <strong>{{ receipt.date }}</strong>
+      </div>
+      <div class="receipt-row">
+        <span>Heure</span>
+        <strong>{{ receipt.time }}</strong>
+      </div>
+      <div class="receipt-row">
+        <span>Durée</span>
+        <strong>1 heure</strong>
+      </div>
+      <hr style="border:none; border-top:1px solid #333; margin:14px 0">
+      <div class="receipt-row total">
+        <span>Montant payé</span>
+        <strong>{{ receipt.amount }} TND</strong>
+      </div>
+      <div class="receipt-row">
+        <span>Statut</span>
+        <strong class="paid-badge">PAYÉ ✓</strong>
+      </div>
+    </div>
+
+    <div class="receipt-actions">
+      <button class="print-btn" (click)="printReceipt()">
+        🖨️ Imprimer le reçu
+      </button>
+      <button class="back-btn" (click)="goToBookings()">
+        📋 Mes réservations
+      </button>
+    </div>
+  </div>
+
+</div>

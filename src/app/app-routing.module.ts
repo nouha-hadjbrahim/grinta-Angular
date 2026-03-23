@@ -13,14 +13,16 @@ import { BookingsComponent } from './features/bookings/bookings-main/bookings.co
 import { WorkoutsComponent } from './features/workouts/workouts-main/workouts.component';
 import { NutritionComponent } from './features/nutrition/nutrition-main/nutrition.component';
 import { CommunityComponent } from './features/community/community-main/community.component';
-import { AuthGuard } from './guards/auth.guard';
+// ✅ Nouveaux imports payment
+import { PaymentComponent } from './features/bookings/payment/payment.component';
+import { PaymentSuccessComponent } from './features/bookings/payment-success/payment-success.component';
+import { PaymentFailComponent } from './features/bookings/payment-fail/payment-fail.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'sign-in', pathMatch: 'full' },
   { path: 'sign-in', component: SignInComponent },
   {
     path: 'main', component: MainComponent,
-    // canActivate: [AuthGuard], // TODO: enable when auth is ready
     children: [
       { path: '', component: HomeComponent },
       { path: 'events', component: EventsComponent },
@@ -31,6 +33,10 @@ const routes: Routes = [
       { path: 'gyms', component: GymsComponent },
       { path: 'coaching', component: CoachingComponent },
       { path: 'bookings', component: BookingsComponent },
+      // ✅ Routes payment
+      { path: 'bookings/payment', component: PaymentComponent },
+      { path: 'bookings/payment-success', component: PaymentSuccessComponent },
+      { path: 'bookings/payment-fail', component: PaymentFailComponent },
       { path: 'nutrition', component: NutritionComponent },
       { path: 'community', component: CommunityComponent },
     ]

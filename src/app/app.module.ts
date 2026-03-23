@@ -1,14 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-
-
-
-
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -27,7 +22,9 @@ import { BookingsComponent } from './features/bookings/bookings-main/bookings.co
 import { NutritionComponent } from './features/nutrition/nutrition-main/nutrition.component';
 import { CommunityComponent } from './features/community/community-main/community.component';
 import { WorkoutsComponent } from './features/workouts/workouts-main/workouts.component';
-
+import { PaymentComponent } from './features/bookings/payment/payment.component';
+import { PaymentSuccessComponent } from './features/bookings/payment-success/payment-success.component';
+import { PaymentFailComponent } from './features/bookings/payment-fail/payment-fail.component';
 
 @NgModule({
   declarations: [
@@ -47,19 +44,19 @@ import { WorkoutsComponent } from './features/workouts/workouts-main/workouts.co
     WorkoutsComponent,
     NutritionComponent,
     CommunityComponent,
-    
+    PaymentComponent,
+    PaymentSuccessComponent,
+    PaymentFailComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    CommonModule,  
+    CommonModule,
     HttpClientModule,
     RouterModule
   ],
-    providers: [
-    provideHttpClient(withInterceptorsFromDi())
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
