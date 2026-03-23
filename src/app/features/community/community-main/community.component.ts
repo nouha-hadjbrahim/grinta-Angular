@@ -1,17 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { PostService } from '../../../services/Community/post.service';
-import { Post, PostComment, CreateCommentRequest } from '../../../services/Community/post.model';
 import { AuthService } from '../../../services/User/auth.service';
+import { Post, PostComment, CreateCommentRequest } from '../../../services/Community/post.model';
 
 @Component({
   selector: 'app-community',
   templateUrl: './community.component.html',
-  styleUrl: './community.component.css'
+  styleUrls: ['./community.component.css']
 })
 export class CommunityComponent implements OnInit {
-
   posts: Post[] = [];
+  loading = true;
+  error = '';
   currentUserId: number | null = null;
+  currentUserEmail: string = '';
+
+  activeTab: string = 'feed';
+  activeCategory: string = 'Everything';
+
+  categories = [
+    { name: 'Everything', icon: 'fas fa-border-all' },
+    { name: 'Training', icon: 'fas fa-dumbbell' },
+    { name: 'Nutrition', icon: 'fas fa-apple-alt' },
+    { name: 'Events', icon: 'fas fa-calendar-alt' }
+  ];
 
   constructor(
     private postService: PostService,
@@ -20,66 +32,64 @@ export class CommunityComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUserId = this.authService.getCurrentUserId();
+    this.currentUserEmail = this.authService.getCurrentUserEmail() || '';
     this.loadPosts();
   }
 
   loadPosts(): void {
+    this.loading = true;
     this.postService.getAllPosts().subscribe({
       next: (data) => {
-        // Filter out posts that belong to the logged-in user
-        if (this.currentUserId !== null) {
-          this.posts = data.filter(post => post.userId !== this.currentUserId);
-        } else {
-          this.posts = data;
-        }
-        
-        // Initialize frontend-only properties
-        this.posts.forEach(post => {
+        this.posts = data.map(post => {
           post.showComments = false;
           post.comments = [];
           post.newCommentText = '';
-          
-          if (this.currentUserId !== null && post.likedByUserIds) {
+          post.isLikedByMe = false;
+          if (this.currentUserId) {
             post.isLikedByMe = post.likedByUserIds.includes(this.currentUserId);
-          } else {
-            post.isLikedByMe = false;
           }
+          return post;
         });
         
-        console.log('Posts fetched (filtered):', this.posts);
+        this.posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        this.loading = false;
       },
       error: (err) => {
-        console.error('Error fetching posts', err);
+        console.error('Error loading posts:', err);
+        this.error = 'Failed to load community feed. Please try again later.';
+        this.loading = false;
       }
     });
   }
 
-  getAvatarInitials(email: string): string {
-    if (!email) return 'U';
-    return email.substring(0, 2).toUpperCase();
+  setCategory(category: string): void {
+    this.activeCategory = category;
   }
 
   toggleLike(post: Post): void {
-    if (this.currentUserId === null) return;
+    if (!this.currentUserId) return;
     
-    // Store in a local variable so TypeScript knows it's strictly a number inside the callback
-    const userId = this.currentUserId;
+    const wasLiked = post.isLikedByMe;
+    
+    if (wasLiked) {
+      post.likesCount--;
+      post.isLikedByMe = false;
+    } else {
+      post.likesCount++;
+      post.isLikedByMe = true;
+    }
 
-    this.postService.toggleLike(post.postId, userId).subscribe({
-      next: () => {
-        if (!post.likedByUserIds) post.likedByUserIds = [];
-        
-        if (post.isLikedByMe) {
-          post.likesCount--;
-          post.isLikedByMe = false;
-          post.likedByUserIds = post.likedByUserIds.filter(id => id !== userId);
-        } else {
+    this.postService.toggleLike(post.postId, this.currentUserId).subscribe({
+      error: (err) => {
+        console.error('Error toggling like:', err);
+        if (wasLiked) {
           post.likesCount++;
           post.isLikedByMe = true;
-          post.likedByUserIds.push(userId);
+        } else {
+          post.likesCount--;
+          post.isLikedByMe = false;
         }
-      },
-      error: (err) => console.error('Error toggling like', err)
+      }
     });
   }
 
@@ -90,104 +100,39 @@ export class CommunityComponent implements OnInit {
         next: (comments) => {
           post.comments = this.organizeComments(comments);
         },
-        error: (err) => console.error('Error fetching comments', err)
+        error: (err) => console.error('Error loading comments', err)
       });
     }
   }
 
-  organizeComments(comments: PostComment[]): PostComment[] {
-    const userId = this.currentUserId;
-    if (userId === null) return [];
-
+  organizeComments(flatComments: PostComment[]): PostComment[] {
     const commentMap = new Map<number, PostComment>();
-    const rootComments: PostComment[] = [];
+    const roots: PostComment[] = [];
 
-    // Initialize all comments and put them in a map
-    comments.forEach(c => {
+    flatComments.forEach(c => {
       c.replies = [];
       c.showReplyInput = false;
       c.newReplyText = '';
-      c.isLikedByMe = c.likedByUserIds ? c.likedByUserIds.includes(userId) : false;
+      if (this.currentUserId) {
+        c.isLikedByMe = c.likedByUserIds ? c.likedByUserIds.includes(this.currentUserId) : false;
+      } else {
+        c.isLikedByMe = false;
+      }
       commentMap.set(c.commentId, c);
     });
 
-    // Build the tree structure
-    comments.forEach(c => {
+    flatComments.forEach(c => {
       if (c.parentCommentId) {
         const parent = commentMap.get(c.parentCommentId);
-        if (parent) {
-          parent.replies?.push(c);
-        } else {
-           rootComments.push(c); // Fallback: if parent not found, show as root
+        if (parent && parent.replies) {
+          parent.replies.push(c);
         }
       } else {
-        rootComments.push(c);
+        roots.push(c);
       }
     });
 
-    return rootComments;
-  }
-
-  toggleCommentLike(comment: PostComment): void {
-    const userId = this.currentUserId;
-    if (userId === null) {
-      console.warn("User must be logged in to like a comment.");
-      return;
-    }
-
-    const previousState = comment.isLikedByMe;
-    
-    // Optimistic UI update
-    comment.isLikedByMe = !comment.isLikedByMe;
-    comment.likesCount = (comment.likesCount || 0) + (comment.isLikedByMe ? 1 : -1);
-
-    this.postService.toggleCommentLike(comment.commentId, userId).subscribe({
-      next: () => {},
-      error: (err) => {
-        console.error('Error toggling comment like:', err);
-        // Revert optimistic update on error
-        comment.isLikedByMe = previousState;
-        comment.likesCount = (comment.likesCount || 0) + (comment.isLikedByMe ? 1 : -1);
-      }
-    });
-  }
-
-  toggleReplyInput(comment: PostComment): void {
-    comment.showReplyInput = !comment.showReplyInput;
-  }
-
-  submitReply(post: Post, parentComment: PostComment): void {
-    const userId = this.currentUserId;
-    if (userId === null) {
-      console.warn("User must be logged in to reply.");
-      return;
-    }
-
-    if (!parentComment.newReplyText || parentComment.newReplyText.trim() === '') {
-      return;
-    }
-
-    const request: CreateCommentRequest = {
-      userId: userId,
-      content: parentComment.newReplyText,
-      parentCommentId: parentComment.commentId
-    };
-
-    this.postService.addComment(post.postId, request).subscribe({
-      next: (newComment) => {
-        if (!parentComment.replies) {
-          parentComment.replies = [];
-        }
-        newComment.isLikedByMe = newComment.likedByUserIds ? newComment.likedByUserIds.includes(userId) : false;
-        parentComment.replies.push(newComment);
-        parentComment.newReplyText = '';
-        parentComment.showReplyInput = false;
-        post.commentsCount++;
-      },
-      error: (err) => {
-        console.error('Error adding reply:', err);
-      }
-    });
+    return roots;
   }
 
   addComment(post: Post): void {
@@ -198,17 +143,115 @@ export class CommunityComponent implements OnInit {
     const content = post.newCommentText.trim();
     post.newCommentText = '';
 
-    this.postService.addComment(post.postId, {
+    const request: CreateCommentRequest = {
       userId: this.currentUserId,
-      content: content
-    }).subscribe({
-      next: (newComment) => {
-        post.commentsCount++;
+      content: content,
+      parentCommentId: null
+    };
+
+    this.postService.addComment(post.postId, request).subscribe({
+      next: (newComment: PostComment) => {
+        newComment.replies = [];
+        newComment.showReplyInput = false;
+        newComment.newReplyText = '';
+        newComment.isLikedByMe = false;
+        
         if (!post.comments) post.comments = [];
         post.comments.push(newComment);
         post.showComments = true;
+        post.commentsCount++;
       },
       error: (err) => console.error('Error adding comment', err)
     });
+  }
+
+  toggleCommentLike(comment: PostComment): void {
+    if (!this.currentUserId) return;
+
+    const wasLiked = comment.isLikedByMe;
+
+    if (wasLiked) {
+      comment.likesCount--;
+      comment.isLikedByMe = false;
+    } else {
+      comment.likesCount++;
+      comment.isLikedByMe = true;
+    }
+
+    this.postService.toggleCommentLike(comment.commentId, this.currentUserId).subscribe({
+      error: (err) => {
+        console.error('Error toggling comment like', err);
+        if (wasLiked) {
+          comment.likesCount++;
+          comment.isLikedByMe = true;
+        } else {
+          comment.likesCount--;
+          comment.isLikedByMe = false;
+        }
+      }
+    });
+  }
+
+  toggleReplyInput(comment: PostComment): void {
+    comment.showReplyInput = !comment.showReplyInput;
+  }
+
+  submitReply(post: Post, parentComment: PostComment): void {
+    if (this.currentUserId === null || !parentComment.newReplyText || parentComment.newReplyText.trim() === '') {
+      return;
+    }
+
+    const content = parentComment.newReplyText.trim();
+    parentComment.newReplyText = '';
+    
+    const request: CreateCommentRequest = {
+      userId: this.currentUserId,
+      content: content,
+      parentCommentId: parentComment.commentId
+    };
+
+    this.postService.addComment(post.postId, request).subscribe({
+      next: (newComment: PostComment) => {
+        newComment.replies = [];
+        newComment.showReplyInput = false;
+        newComment.newReplyText = '';
+        newComment.isLikedByMe = false;
+
+        if (!parentComment.replies) parentComment.replies = [];
+        parentComment.replies.push(newComment);
+        parentComment.showReplyInput = false;
+        post.commentsCount++;
+      },
+      error: (err) => console.error('Error adding reply', err)
+    });
+  }
+
+  getAvatarInitials(email: string): string {
+    if (!email) return 'U';
+    return email.charAt(0).toUpperCase();
+  }
+
+  formatDate(date: Date | string): string {
+    const d = new Date(date);
+    const now = new Date();
+    const diffMs = now.getTime() - d.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMins < 60) {
+      return diffMins <= 1 ? 'Just now' : `${diffMins}m ago`;
+    } else if (diffHours < 24) {
+      return `${diffHours}h ago`;
+    } else if (diffDays < 7) {
+      return `${diffDays}d ago`;
+    } else {
+      return d.toLocaleDateString();
+    }
+  }
+
+  getAbsoluteImageUrl(imgName?: string): string {
+    if (!imgName) return '';
+    return imgName.includes('http') || imgName.startsWith('data:') ? imgName : `http://localhost:8000/uploads/${imgName}`;
   }
 }

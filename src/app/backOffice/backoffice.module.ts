@@ -17,7 +17,8 @@ import { WorkoutsComponent } from './workouts/workouts.component';
 import { GymsComponent } from './gyms/gyms.component';
 import { TrainingComponent } from './training/training.component';
 import { NutritionComponent } from './nutrition/nutrition.component';
-import { CommunityComponent } from './community/community.component';
+
+import { CommunityComponent } from "./community/community-main/community.component";
 
 // Shared Components
 import { TableComponent } from './shared/components/table/table.component';
@@ -44,7 +45,6 @@ import { CommunityService } from './shared/services/community.service';
     GymsComponent,
     TrainingComponent,
     NutritionComponent,
-    CommunityComponent,
     // Shared
     TableComponent
   ],
@@ -53,7 +53,8 @@ import { CommunityService } from './shared/services/community.service';
     FormsModule,
     BackofficeRoutingModule,
     UsersComponent,
-    UpdateUserComponent
+    UpdateUserComponent,
+    CommunityComponent
   ],
   providers: [
     UserService,

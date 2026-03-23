@@ -1,0 +1,256 @@
+<div class="community-container">
+  <!-- Header -->
+  <div class="community-header">
+    <div class="header-title">
+      <h1>Community & Challenges Management</h1>
+      <p class="header-subtitle">Manage and organize your community posts</p>
+    </div>
+    <div class="header-actions">
+      <div class="search-box">
+        <input
+          type="text"
+          placeholder="Search posts..."
+          [(ngModel)]="searchTerm"
+          (input)="searchPosts(searchTerm)"
+          class="search-input"
+        />
+        <i class="bi bi-search search-icon"></i>
+      </div>
+      <button class="btn-add-new" (click)="openAddModal()">+ Add New Post</button>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading posts...</p>
+  </div>
+
+  <!-- Posts Table -->
+  <div *ngIf="!loading" class="table-wrapper">
+    <table class="community-table">
+      <thead>
+        <tr>
+          <th class="col-type">Type</th>
+          <th class="col-author">Author</th>
+          <th class="col-content">Content</th>
+          <th class="col-stats">Stats</th>
+          <th class="col-date">Date</th>
+          <th class="col-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let post of paginatedPosts" class="table-row">
+          
+          <!-- Type -->
+          <td class="col-type" (click)="openViewModal(post, 'details')" style="cursor: pointer;" title="View Datails">
+            <span class="status-badge" [ngClass]="{'badge-active': post.type === 'CHALLENGE' || post.type === 'PROGRESS', 'badge-inactive': post.type === 'GENERAL'}">
+              {{ post.type || 'GENERAL' }}
+            </span>
+          </td>
+
+          <!-- Author -->
+          <td class="col-author" (click)="openViewModal(post, 'details')" style="cursor: pointer;" title="View Details">{{ post.userEmail || 'Unknown' }}</td>
+
+          <!-- Content (Truncated) -->
+          <td class="col-content" (click)="openViewModal(post, 'details')" style="cursor: pointer;" title="View Details">{{ (post.content | slice:0:30) }}{{ post.content && post.content.length > 30 ? '...' : '' }}</td>
+
+          <!-- Stats -->
+          <td class="col-stats">
+            <span (click)="openViewModal(post, 'likes')" style="cursor: pointer; color: #ff6b81;" title="View Likes">
+               <i class="bi bi-heart" style="margin-right:4px;"></i> {{ post.likesCount || 0 }}
+            </span> &nbsp;
+            <span (click)="openViewModal(post, 'comments')" style="cursor: pointer; color: #7bed9f;" title="View Comments">
+               <i class="bi bi-chat" style="margin-right:4px;"></i> {{ post.commentsCount || 0 }}
+            </span>
+          </td>
+
+          <!-- Date -->
+          <td class="col-date">{{ post.createdAt | date:'shortDate' }}</td>
+
+          <!-- Actions -->
+          <td class="col-actions">
+            <!-- No view details implemented, omitting to focus on CRUD -->
+            <button
+              class="action-btn edit-btn"
+              (click)="openUpdateModal(post)"
+              title="Edit Post"
+            >
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button
+              class="action-btn delete-btn"
+              (click)="deletePost(post)"
+              title="Delete Post"
+            >
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+
+        <!-- Empty State -->
+        <tr *ngIf="paginatedPosts.length === 0" class="empty-state">
+          <td colspan="6">No posts found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!loading && filteredPosts.length > 0" class="pagination-container">
+    <div class="pagination-info">
+      Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to
+      {{ getPaginationEndIndex() }} of
+      {{ filteredPosts.length }} results
+    </div>
+
+    <div class="pagination-controls">
+      <button
+        class="pagination-btn"
+        (click)="previousPage()"
+        [disabled]="currentPage === 1"
+      >
+        ← Previous
+      </button>
+
+      <div class="page-numbers">
+        <button
+          *ngFor="let page of getPageNumbers()"
+          class="page-btn"
+          [class.active]="page === currentPage"
+          (click)="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+      </div>
+
+      <button
+        class="pagination-btn"
+        (click)="nextPage()"
+        [disabled]="currentPage === totalPages"
+      >
+        Next →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Community Modal -->
+<app-add-community
+  [isOpen]="showAddModal"
+  (close)="closeAddModal()"
+  (postAdded)="onPostAddedOrUpdated()"
+></app-add-community>
+
+<!-- Update Community Modal -->
+<app-update-community
+  [isOpen]="showUpdateModal"
+  [post]="postToUpdate"
+  (close)="closeUpdateModal()"
+  (postUpdated)="onPostAddedOrUpdated()"
+></app-update-community>
+
+<!-- View Modal -->
+<div class="modal-overlay" *ngIf="postToView" (click)="closeViewModal()">
+  <div class="modal-content view-modal" (click)="$event.stopPropagation()" style="max-height: 85vh; max-width: 900px; overflow-y: auto; width: 800px; padding: 25px; border-radius: 12px; background-color: #1e1e1e; border: 1px solid #333;">
+    
+    <div class="modal-header d-flex justify-content-between align-items-center mb-4" style="border-bottom: 1px solid #333; padding-bottom: 15px;">
+      <h2 style="margin: 0; color: #fff; font-size: 1.5rem;">
+        <span *ngIf="viewMode === 'details'">Post Details</span>
+        <span *ngIf="viewMode === 'likes'">Post Likes</span>
+        <span *ngIf="viewMode === 'comments'">Post Comments</span>
+      </h2>
+      <button class="btn-close-modal" (click)="closeViewModal()" style="background: none; border: none; color: #aaa; font-size: 1.5rem; cursor: pointer;">&times;</button>
+    </div>
+
+    <!-- Details View -->
+    <div *ngIf="viewMode === 'details'" class="view-details" style="color: #ccc;">
+      <div style="margin-bottom: 15px;">
+        <strong>Author:</strong> {{ postToView.userEmail }}
+      </div>
+      <div style="margin-bottom: 15px;">
+        <strong>Type:</strong> <span class="status-badge badge-active">{{ postToView.type || 'GENERAL' }}</span>
+      </div>
+      <div style="margin-bottom: 15px;">
+        <strong>Date:</strong> {{ postToView.createdAt | date:'medium' }}
+      </div>
+      <div style="margin-bottom: 20px;">
+        <strong>Content:</strong>
+        <p style="margin-top: 8px; padding: 15px; background: #2a2a2a; border-radius: 8px;">{{ postToView.content }}</p>
+      </div>
+
+      <div *ngIf="postToView.images && postToView.images.length > 0">
+        <strong>Images:</strong>
+        <div class="images-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">
+          <div *ngFor="let img of postToView.images" class="img-preview" style="position: relative;">
+            <img [src]="getAbsoluteImageUrl(img.imageUrl)" 
+                 style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; border: 1px solid #444;" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Likes View -->
+    <div *ngIf="viewMode === 'likes'" class="view-likes">
+        <p style="color: #aaa; margin-bottom: 15px;">Total likes: {{ postToView.likesCount }}</p>
+        <ul *ngIf="postToView.likedByUsers && postToView.likedByUsers.length > 0; else noLikes" style="list-style: none; padding: 0; margin: 0;">
+            <li *ngFor="let user of postToView.likedByUsers" style="padding: 10px 15px; background: #2a2a2a; border-radius: 6px; margin-bottom: 8px; color: #fff; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center;">
+                    <i class="bi bi-person-circle" style="font-size: 1.2rem; margin-right: 10px; color: #ff6b81;"></i>
+                    <span style="font-weight: 500; margin-right: 8px;">{{ user.name || 'Unknown User' }}</span>
+                </div>
+                <span style="color: #888; font-size: 0.9rem;">{{ user.email }}</span>
+            </li>
+        </ul>
+        <ng-template #noLikes>
+            <p style="color: #888; text-align: center; padding: 20px; background: #2a2a2a; border-radius: 8px;">No likes on this post yet.</p>
+        </ng-template>
+    </div>
+
+    <!-- Comments View -->
+    <div *ngIf="viewMode === 'comments'" class="view-comments">
+        <p style="color: #aaa; margin-bottom: 15px;">Total Comments: {{ postToView.commentsCount }}</p>
+        
+        <div *ngIf="postToView.comments && postToView.comments.length > 0; else noComments">
+            <!-- Recursive Comments Display - Template for a comment -->
+            <ng-template #commentNode let-comment="comment">
+                <div class="comment-item" style="background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid #7bed9f; position: relative;">
+                    <button (click)="deleteComment(comment, postToView)" style="position: absolute; top: 10px; right: 10px; background: none; border: none; color: #ff6b81; cursor: pointer;" title="Delete Comment">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px; padding-right: 25px;">
+                        <strong style="color: #fff;">{{ comment.userEmail || ('User ' + comment.userId) }}</strong>
+                        <small style="color: #888;">{{ comment.createdAt | date:'short' }}</small>
+                    </div>
+                    <p style="color: #ccc; margin: 8px 0;">{{ comment.content }}</p>
+                    <div style="font-size: 0.85rem; color: #aaa;">
+                        <i class="bi bi-heart" style="color: #ff6b81;"></i> {{ comment.likesCount || 0 }} 
+                    </div>
+
+                    <!-- Replies -->
+                    <div *ngIf="comment.replies && comment.replies.length > 0" style="margin-top: 10px; margin-left: 20px; padding-left: 15px; border-left: 1px dashed #444;">
+                        <ng-container *ngFor="let rep of comment.replies">
+                            <ng-container *ngTemplateOutlet="commentNode; context:{ comment: rep }"></ng-container>
+                        </ng-container>
+                    </div>
+                </div>
+            </ng-template>
+
+            <!-- Loop root comments -->
+            <ng-container *ngFor="let c of postToView.comments">
+                <ng-container *ngTemplateOutlet="commentNode; context:{ comment: c }"></ng-container>
+            </ng-container>
+        </div>
+        
+        <ng-template #noComments>
+            <p style="color: #888; text-align: center; padding: 20px; background: #2a2a2a; border-radius: 8px;">No comments on this post yet.</p>
+        </ng-template>
+    </div>
+
+  </div>
+</div>

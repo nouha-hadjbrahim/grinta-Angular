@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommunityComponent } from './community.component';
-import { CommunityService } from '../shared/services/community.service';
-import { TableComponent } from '../shared/components/table/table.component';
+import { CommunityService } from '../../shared/services/community.service';
+import {  } from '../../shared/components/table/table.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -11,7 +11,7 @@ describe('CommunityComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CommunityComponent, TableComponent],
+      declarations: [CommunityComponent, ],
       imports: [CommonModule, FormsModule],
       providers: [CommunityService]
     }).compileComponents();

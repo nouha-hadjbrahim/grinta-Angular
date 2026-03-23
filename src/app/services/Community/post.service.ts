@@ -8,9 +8,10 @@ import { Post, CreatePostRequest, PostComment, CreateCommentRequest } from './po
   providedIn: 'root'
 })
 export class PostService {
+
   private apiUrl = `${environment.apiUrl}/community/posts`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAllPosts(): Observable<Post[]> {
     return this.http.get<Post[]>(this.apiUrl);
@@ -20,11 +21,11 @@ export class PostService {
     return this.http.get<Post>(`${this.apiUrl}/${id}`);
   }
 
-  createPost(request: CreatePostRequest): Observable<Post> {
+  createPost(request: any): Observable<Post> {
     return this.http.post<Post>(this.apiUrl, request);
   }
 
-  updatePost(id: number, request: CreatePostRequest): Observable<Post> {
+  updatePost(id: number, request: any): Observable<Post> {
     return this.http.put<Post>(`${this.apiUrl}/${id}`, request);
   }
 
@@ -32,9 +33,8 @@ export class PostService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  // Comments
-  getComments(postId: number): Observable<PostComment[]> {
-    return this.http.get<PostComment[]>(`${this.apiUrl}/${postId}/comments`);
+  toggleLike(postId: number, userId: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${postId}/like?userId=${userId}`, {});
   }
 
   addComment(postId: number, request: CreateCommentRequest): Observable<PostComment> {
@@ -45,8 +45,11 @@ export class PostService {
     return this.http.post<void>(`${this.apiUrl}/comments/${commentId}/like?userId=${userId}`, {});
   }
 
-  // Likes
-  toggleLike(postId: number, userId: number): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/${postId}/like?userId=${userId}`, {});
+  getComments(postId: number): Observable<PostComment[]> {
+    return this.http.get<PostComment[]>(`${this.apiUrl}/${postId}/comments`);
+  }
+
+  deleteComment(commentId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/comments/${commentId}`);
   }
 }
