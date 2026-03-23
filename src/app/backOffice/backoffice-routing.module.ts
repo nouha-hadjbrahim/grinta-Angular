@@ -8,7 +8,7 @@ import { WorkoutsComponent } from './workouts/workouts.component';
 import { GymsComponent } from './gyms/gyms.component';
 import { TrainingComponent } from './training/training.component';
 import { NutritionComponent } from './nutrition/nutrition.component';
-import { CommunityComponent } from './community/community.component';
+import { CommunityComponent } from './community/community-main/community.component';
 
 const routes: Routes = [
   {

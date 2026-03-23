@@ -1,0 +1,91 @@
+<div *ngIf="isOpen" class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <!-- Close Button -->
+    <button class="close-btn" (click)="closeModal()">✕</button>
+
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="user-info">
+        <h2 class="user-name">Create New Post</h2>
+        <p class="user-email">Share something with the community</p>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="addForm" class="form-container" (ngSubmit)="onSubmit()">
+      
+      <!-- Type Dropdown -->
+      <div class="form-group">
+        <label for="typeSelect" class="form-label">Post Type</label>
+        <select
+          id="typeSelect"
+          class="form-select"
+          formControlName="type"
+        >
+          <option *ngFor="let type of postTypes" [value]="type">{{ type }}</option>
+        </select>
+      </div>
+
+      <!-- Content Field -->
+      <div class="form-group">
+        <label for="contentInput" class="form-label">Content</label>
+        <textarea
+          id="contentInput"
+          class="form-input"
+          formControlName="content"
+          placeholder="What's on your mind?"
+          rows="4"
+          style="min-height: 100px; resize: vertical;"
+        ></textarea>
+        <div
+          *ngIf="addForm.get('content')?.invalid && addForm.get('content')?.touched"
+          class="error-text"
+        >
+          <small *ngIf="addForm.get('content')?.errors?.['required']">Content is required.</small>
+        </div>
+      </div>
+
+      <!-- Image Upload Area -->
+      <div class="form-group">
+        <label class="form-label">Post Images (Optional)</label>
+        <div class="avatar-container" style="justify-content: flex-start; margin-bottom: 10px; display: flex; flex-wrap: wrap; gap: 10px;">
+          <!-- Existing Previews -->
+          <div *ngFor="let preview of photoPreviews; let i = index" style="position: relative; width: 100px; height: 100px;">
+            <img [src]="preview" alt="Post Preview" class="avatar-image" style="border-radius: 8px; width: 100%; height: 100%; object-fit: cover;" />
+            <button type="button" class="btn-cancel" style="position: absolute; top: -5px; right: -5px; padding: 2px 6px; border-radius: 50%; font-size: 10px; background: red; color: white; border: none; cursor: pointer;" (click)="removeImage(i)">✕</button>
+          </div>
+          <!-- Add Button Box -->
+          <div style="position: relative; width: 100px; height: 100px; border: 2px dashed #ccc; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+            <label for="postImageUpload" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #999; font-size: 24px;">+</label>
+            <input type="file" id="postImageUpload" class="hidden-input" accept="image/*" multiple (change)="onPhotoSelected($event)" style="display: none;" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Success Message -->
+      <div *ngIf="successMessage" class="success-message">
+        ✓ {{ successMessage }}
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="error-message">
+        ✗ {{ errorMessage }}
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="closeModal()">
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn-save"
+          [disabled]="!isFormValid() || loading"
+        >
+          <span *ngIf="loading" class="spinner-small"></span>
+          {{ loading ? 'Posting...' : 'Post' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
