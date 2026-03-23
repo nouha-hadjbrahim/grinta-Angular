@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../../services/user.service';
+import { UserService } from '../../services/User/user.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UpdateUserComponent } from './update-user/update-user.component';
@@ -178,7 +178,7 @@ export class UsersComponent implements OnInit {
         this.showModal = true;
         this.loading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error loading user details:', err);
         this.error = 'Failed to load user details. Please try again.';
         this.loading = false;
@@ -219,7 +219,7 @@ export class UsersComponent implements OnInit {
           this.loadUsers();
           alert('User deleted successfully');
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Error deleting user:', err);
           this.error = 'Failed to delete user. Please try again.';
           this.loading = false;
