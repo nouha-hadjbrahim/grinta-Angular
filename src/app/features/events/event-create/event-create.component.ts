@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventService } from '../../../services/events/event.service';
-import { GrintaEvent } from '../../../services/events/grinta-event.model';
+import { GrintaEvent, GrintaEventTag } from '../../../services/events/grinta-event.model';
 import { AuthService } from '../../../services/User/auth.service';
+import { forkJoin, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-event-create',
@@ -22,6 +24,9 @@ export class EventCreateComponent {
   };
 
   errors: any = {};
+  tags: GrintaEventTag[] = [];
+  newTag: GrintaEventTag = { label: '', color: '#e63946' };
+  tagError = '';
 
   get todayDate(): string {
     return new Date().toISOString().split('T')[0];
@@ -33,44 +38,55 @@ export class EventCreateComponent {
     private router: Router
   ) {}
 
+  // ── Tags ─────────────────────────────────────
+  addTag(): void {
+    if (!this.newTag.label.trim()) {
+      this.tagError = 'Le label du tag est obligatoire';
+      return;
+    }
+    if (this.newTag.label.length > 20) {
+      this.tagError = 'Le label ne doit pas dépasser 20 caractères';
+      return;
+    }
+    if (this.tags.length >= 5) {
+      this.tagError = 'Maximum 5 tags par événement';
+      return;
+    }
+    this.tags.push({ ...this.newTag });
+    this.newTag = { label: '', color: '#e63946' };
+    this.tagError = '';
+  }
+
+  removeTag(index: number): void {
+    this.tags.splice(index, 1);
+  }
+
+  // ── Validation ───────────────────────────────
   validate(): boolean {
     this.errors = {};
 
-    // Titre obligatoire
     if (!this.formEvent.title.trim()) {
       this.errors.title = 'Le titre est obligatoire';
     }
-
-    // Nom max 30 caractères
     if (this.formEvent.name && this.formEvent.name.length > 30) {
       this.errors.name = 'Le nom ne doit pas dépasser 30 caractères';
     }
-
-    // Date obligatoire et pas dans le passé
     if (!this.formEvent.date) {
       this.errors.date = 'La date est obligatoire';
     } else if (this.formEvent.date < this.todayDate) {
       this.errors.date = 'La date ne peut pas être dans le passé';
     }
-
-    // Heure obligatoire
     if (!this.formEvent.time) {
       this.errors.time = "L'heure est obligatoire";
     }
-
-    // Lieu obligatoire
     if (!this.formEvent.location.trim()) {
       this.errors.location = 'Le lieu est obligatoire';
     }
-
-    // Description min 20 caractères
     if (!this.formEvent.description.trim()) {
       this.errors.description = 'La description est obligatoire';
     } else if (this.formEvent.description.trim().length < 20) {
       this.errors.description = 'La description doit contenir au moins 20 caractères';
     }
-
-    // Max participants > 0
     if (!this.formEvent.maxParticipants || this.formEvent.maxParticipants < 1) {
       this.errors.maxParticipants = 'Le nombre de participants doit être supérieur à 0';
     }
@@ -78,6 +94,7 @@ export class EventCreateComponent {
     return Object.keys(this.errors).length === 0;
   }
 
+  // ── Save ─────────────────────────────────────
   saveEvent(): void {
     if (!this.validate()) return;
 
@@ -85,7 +102,18 @@ export class EventCreateComponent {
     if (!userId) { alert('Vous devez être connecté !'); return; }
 
     this.formEvent.createdByUserId = userId;
-    this.eventService.create(this.formEvent).subscribe({
+
+    this.eventService.create(this.formEvent).pipe(
+      switchMap((createdEvent) => {
+        if (this.tags.length > 0 && createdEvent.id) {
+          const tagObservables = this.tags.map(tag =>
+            this.eventService.addTag(createdEvent.id!, tag)
+          );
+          return forkJoin(tagObservables);
+        }
+        return of([]);
+      })
+    ).subscribe({
       next: () => {
         alert('Événement créé avec succès !');
         this.router.navigate(['/main/events']);

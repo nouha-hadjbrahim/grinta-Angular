@@ -18,47 +18,62 @@
   <!-- Search -->
   <input class="search-input"
          type="text"
-         placeholder="Rechercher..."
+         placeholder="Rechercher par titre ou lieu..."
          [(ngModel)]="searchText"/>
 
-  <!-- Liste -->
+  <!-- Liste des événements -->
   <div class="events-grid">
     <div class="event-card"
          *ngFor="let event of filteredEvents"
          (click)="goToDetail(event.id!)">
 
+      <!-- En-tête de la carte -->
       <div class="card-top">
         <span class="badge" [ngClass]="getStatusClass(event.status!)">
           {{ event.status }}
         </span>
         <div class="card-actions" *ngIf="isMyEvent(event)">
-          <button (click)="openEdit(event); $event.stopPropagation()">✏️</button>
-          <button (click)="deleteEvent(event.id!); $event.stopPropagation()">🗑️</button>
+          <button (click)="openEdit(event); $event.stopPropagation()" title="Modifier">
+            ✏️
+          </button>
+          <button (click)="deleteEvent(event.id!); $event.stopPropagation()" title="Supprimer">
+            🗑️
+          </button>
         </div>
       </div>
 
+      <!-- Titre -->
       <h3>{{ event.title }}</h3>
 
+      <!-- Métadonnées -->
       <p class="event-meta">
-        📅 {{ event.date | date:'dd/MM/yyyy' }} &nbsp;·&nbsp;
+        📅 {{ formatDate(event.date) }} &nbsp;·&nbsp;
         🕐 {{ event.time }} &nbsp;·&nbsp;
         📍 {{ event.location }}
       </p>
 
-      <p class="event-desc">{{ event.description }}</p>
+      <!-- Description courte -->
+      <p class="event-desc">{{ event.description | slice:0:100 }}{{ event.description.length > 100 ? '...' : '' }}</p>
 
+      <!-- Nombre de participants -->
       <p class="event-places">
         👥 {{ event.registrations?.length || 0 }} / {{ event.maxParticipants }} places
       </p>
 
-      <div class="tags-row">
+      <!-- SECTION TAGS - AFFICHAGE DES TAGS -->
+      <div class="tags-row" *ngIf="event.tags && event.tags.length > 0">
         <span class="tag"
               *ngFor="let tag of event.tags"
-              [style.background-color]="tag.color">
-          {{ tag.label }}
+              [style.background-color]="tag.color || '#e63946'"
+              [style.color]="isDarkColor(tag.color || '#e63946') ? '#fff' : '#000'">
+          #{{ tag.label }}
         </span>
       </div>
+      <div class="tags-row" *ngIf="!event.tags || event.tags.length === 0">
+        <span class="tag-empty">Aucun tag</span>
+      </div>
 
+      <!-- Pied de carte -->
       <div class="card-footer">
         <button class="btn-register"
                 (click)="registerToEvent(event.id!); $event.stopPropagation()"
@@ -73,9 +88,12 @@
     </div>
   </div>
 
-  <!-- Aucun event -->
+  <!-- Aucun événement -->
   <div class="empty-state" *ngIf="filteredEvents.length === 0">
-    <p>Aucun événement trouvé.</p>
+    <p *ngIf="showMyEvents && searchText">Aucun de vos événements ne correspond à la recherche.</p>
+    <p *ngIf="showMyEvents && !searchText">Vous n'avez pas encore créé d'événement.</p>
+    <p *ngIf="!showMyEvents && searchText">Aucun événement ne correspond à votre recherche.</p>
+    <p *ngIf="!showMyEvents && !searchText">Aucun événement disponible pour le moment.</p>
   </div>
 
 </div>

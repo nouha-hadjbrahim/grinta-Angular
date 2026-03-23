@@ -27,7 +27,8 @@
              [class.input-error]="errors.name"/>
       <div class="input-footer">
         <span class="error-msg" *ngIf="errors.name">{{ errors.name }}</span>
-        <span class="char-count" [class.near-limit]="formEvent.name.length >= 25">
+        <span class="char-count"
+              [class.near-limit]="formEvent.name.length >= 25">
           {{ formEvent.name.length }}/30
         </span>
       </div>
@@ -72,7 +73,8 @@
       </textarea>
       <div class="input-footer">
         <span class="error-msg" *ngIf="errors.description">{{ errors.description }}</span>
-        <span class="char-count" [class.valid]="formEvent.description.length >= 20">
+        <span class="char-count"
+              [class.valid]="formEvent.description.length >= 20">
           {{ formEvent.description.length }} / min 20
         </span>
       </div>
@@ -88,6 +90,35 @@
       <span class="error-msg" *ngIf="errors.maxParticipants">
         {{ errors.maxParticipants }}
       </span>
+    </div>
+
+    <!-- Tags -->
+    <div class="form-group">
+      <label>Tags <span class="hint">(max 5 tags)</span></label>
+
+      <!-- Tags ajoutés -->
+      <div class="tags-preview" *ngIf="tags.length > 0">
+        <span class="tag-item"
+              *ngFor="let tag of tags; let i = index"
+              [style.background-color]="tag.color">
+          {{ tag.label }}
+          <button class="tag-remove" (click)="removeTag(i)">✕</button>
+        </span>
+      </div>
+
+      <!-- Formulaire ajout tag -->
+      <div class="tag-form" *ngIf="tags.length < 5">
+        <input type="text"
+               [(ngModel)]="newTag.label"
+               placeholder="#outdoor, #gratuit..."
+               maxlength="20"
+               class="tag-input"/>
+        <input type="color"
+               [(ngModel)]="newTag.color"
+               class="tag-color"/>
+        <button class="btn-add-tag" (click)="addTag()">+ Ajouter</button>
+      </div>
+      <span class="error-msg" *ngIf="tagError">{{ tagError }}</span>
     </div>
 
     <div class="form-actions">

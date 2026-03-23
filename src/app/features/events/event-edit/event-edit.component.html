@@ -7,53 +7,114 @@
 
   <div class="edit-form">
 
-    <div class="form-group">
+    <!-- Titre -->
+    <div class="form-group" [class.has-error]="errors.title">
       <label>Titre *</label>
       <input type="text"
              [(ngModel)]="formEvent.title"
              placeholder="Titre de l'événement"/>
+      <span class="error-message" *ngIf="errors.title">{{ errors.title }}</span>
     </div>
 
-    <div class="form-group">
-      <label>Nom</label>
+    <!-- Nom -->
+    <div class="form-group" [class.has-error]="errors.name">
+      <label>Nom <span class="hint">(max 30 caractères)</span></label>
       <input type="text"
              [(ngModel)]="formEvent.name"
-             placeholder="Nom court"/>
+             placeholder="Nom court"
+             maxlength="30"/>
+      <div class="input-footer">
+        <span class="error-message" *ngIf="errors.name">{{ errors.name }}</span>
+        <span class="char-count"
+              [class.near-limit]="formEvent.name.length >= 25">
+          {{ formEvent.name.length }}/30
+        </span>
+      </div>
     </div>
 
+    <!-- Date et Heure -->
     <div class="form-row">
-      <div class="form-group">
+      <div class="form-group" [class.has-error]="errors.date">
         <label>Date *</label>
-        <input type="date" [(ngModel)]="formEvent.date"/>
+        <input type="date" 
+               [(ngModel)]="formEvent.date"
+               [min]="todayDate"/>
+        <span class="error-message" *ngIf="errors.date">{{ errors.date }}</span>
       </div>
-      <div class="form-group">
+      <div class="form-group" [class.has-error]="errors.time">
         <label>Heure *</label>
         <input type="time" [(ngModel)]="formEvent.time"/>
+        <span class="error-message" *ngIf="errors.time">{{ errors.time }}</span>
       </div>
     </div>
 
-    <div class="form-group">
+    <!-- Lieu -->
+    <div class="form-group" [class.has-error]="errors.location">
       <label>Lieu *</label>
       <input type="text"
              [(ngModel)]="formEvent.location"
              placeholder="Ville, adresse..."/>
+      <span class="error-message" *ngIf="errors.location">{{ errors.location }}</span>
     </div>
 
-    <div class="form-group">
-      <label>Description</label>
+    <!-- Description -->
+    <div class="form-group" [class.has-error]="errors.description">
+      <label>Description * <span class="hint">(min 20 caractères)</span></label>
       <textarea [(ngModel)]="formEvent.description"
                 rows="4"
                 placeholder="Décrivez l'événement...">
       </textarea>
+      <div class="input-footer">
+        <span class="error-message" *ngIf="errors.description">{{ errors.description }}</span>
+        <span class="char-count"
+              [class.valid]="formEvent.description.length >= 20">
+          {{ formEvent.description.length }}/20 min
+        </span>
+      </div>
     </div>
 
-    <div class="form-group">
-      <label>Max participants</label>
+    <!-- Max participants -->
+    <div class="form-group" [class.has-error]="errors.maxParticipants">
+      <label>Max participants *</label>
       <input type="number"
              [(ngModel)]="formEvent.maxParticipants"
              min="1"/>
+      <span class="error-message" *ngIf="errors.maxParticipants">{{ errors.maxParticipants }}</span>
     </div>
 
+    <!-- SECTION TAGS -->
+    <div class="form-group">
+      <label>Tags <span class="hint">(max 5 tags)</span></label>
+
+      <!-- Tags existants -->
+      <div class="tags-preview" *ngIf="tags.length > 0">
+        <span class="tag-item"
+              *ngFor="let tag of tags; let i = index"
+              [style.background-color]="tag.color"
+              [style.color]="isDarkColor(tag.color) ? '#fff' : '#000'">
+          #{{ tag.label }}
+          <button class="tag-remove" (click)="removeTag(i)" type="button" title="Supprimer le tag">✕</button>
+        </span>
+      </div>
+
+      <!-- Formulaire ajout tag -->
+      <div class="tag-form" *ngIf="tags.length < 5">
+        <input type="text"
+               [(ngModel)]="newTag.label"
+               placeholder="#sport, #gratuit, #outdoor..."
+               maxlength="20"
+               class="tag-input"
+               (keyup.enter)="addTag()"/>
+        <input type="color"
+               [(ngModel)]="newTag.color"
+               class="tag-color"/>
+        <button class="btn-add-tag" (click)="addTag()" type="button">+ Ajouter</button>
+      </div>
+      <span class="error-message" *ngIf="tagError">{{ tagError }}</span>
+      <span class="hint" *ngIf="tags.length === 5">Maximum 5 tags atteint</span>
+    </div>
+
+    <!-- Actions -->
     <div class="form-actions">
       <button class="btn-cancel" (click)="cancel()">Annuler</button>
       <button class="btn-save" (click)="saveEvent()">
