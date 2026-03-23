@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
-import { UserService } from '../../../services/user.service';
+import { AuthService } from '../../../services/User/auth.service';
+import { UserService } from '../../../services/User/user.service';
 
 interface User {
   id?: number;
@@ -61,7 +61,7 @@ export class NavbarComponent implements OnInit {
               this.adminName = user.name;
             }
           },
-          error: (err) => {
+          error: (err: any) => {
             console.error('Error loading user photo:', err);
           }
         });
@@ -84,7 +84,7 @@ export class NavbarComponent implements OnInit {
           this.showProfileModal = true;
           this.showDropdown = false;
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Error loading profile:', err);
         }
       });
