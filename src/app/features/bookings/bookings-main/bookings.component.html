@@ -2,9 +2,9 @@
 
   <!-- TOAST -->
   <div class="toast-notification" *ngIf="toast"
-       [class.toast-success]="toast.type === 'success'"
-       [class.toast-error]="toast.type === 'error'">
-    {{ toast.message }}
+       [class.toast-success]="toast!.type === 'success'"
+[class.toast-error]="toast!.type === 'error'">
+{{ toast!.message }}
   </div>
 
   <!-- MODALE CONFIRMATION CANCEL -->
@@ -35,7 +35,6 @@
               (click)="activeTab = 'book'; resetForm()">
         📅 {{ editingId ? 'Edit Booking' : 'Book a Venue' }}
       </button>
-
       <button [class.tab-active]="activeTab === 'mybookings'"
               (click)="activeTab = 'mybookings'">
         📋 My Bookings
@@ -43,7 +42,6 @@
           {{ activeBookings.length }}
         </span>
       </button>
-
       <button [class.tab-active]="activeTab === 'history'"
               (click)="activeTab = 'history'">
         🕐 Historique
@@ -90,7 +88,8 @@
       <!-- STEP 2 -->
       <h3 class="step-label">Step 2: Select Date</h3>
       <input type="date"
-             [(ngModel)]="selectedDate"
+       name="selectedDate"
+       [(ngModel)]="selectedDate"
              (ngModelChange)="onDateChange()"
              [min]="today"
              class="date-input">

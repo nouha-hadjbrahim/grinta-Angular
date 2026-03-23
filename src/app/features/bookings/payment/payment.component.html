@@ -1,0 +1,95 @@
+<div class="payment-wrapper">
+  <div class="payment-card">
+
+    <!-- HEADER -->
+    <div class="payment-header">
+      <h1>💳 Paiement <span>Flouci</span></h1>
+      <p>Finalisez votre réservation en toute sécurité</p>
+    </div>
+
+    <!-- RÉCAPITULATIF -->
+    <div class="receipt">
+      <h3>🧾 Récapitulatif de votre réservation</h3>
+
+      <div class="receipt-row">
+        <span>Terrain</span>
+        <strong>{{ terrain?.name || '-' }}</strong>
+      </div>
+
+      <div class="receipt-row">
+        <span>Type</span>
+        <strong>{{ terrain?.type || '-' }}</strong>
+      </div>
+
+      <div class="receipt-row">
+        <span>Localisation</span>
+        <strong>📍 {{ terrain?.location || '-' }}</strong>
+      </div>
+
+      <div class="receipt-row">
+        <span>Date</span>
+        <strong>📅 {{ date || '-' }}</strong>
+      </div>
+
+      <div class="receipt-row">
+        <span>Heure</span>
+        <strong>🕐 {{ time || '-' }}</strong>
+      </div>
+
+      <div class="receipt-row">
+        <span>Durée</span>
+        <strong>⏱ 1 heure</strong>
+      </div>
+
+      <div class="receipt-row">
+        <span>Capacité</span>
+        <strong>👥 {{ terrain?.capacity || '-' }} joueurs</strong>
+      </div>
+
+      <hr class="receipt-divider">
+
+      <div class="receipt-row">
+        <span>Prix terrain</span>
+        <strong>{{ terrain?.price || 0 }} TND</strong>
+      </div>
+
+      <div class="receipt-row">
+        <span>Frais de réservation</span>
+        <strong>5 TND</strong>
+      </div>
+
+      <div class="receipt-row total-row">
+        <span>Total à payer</span>
+        <strong>{{ amount }} TND</strong>
+      </div>
+    </div>
+
+    <!-- INFO PAIEMENT -->
+    <div class="payment-info">
+      <div class="security-badge">
+        🔒 Paiement 100% sécurisé via <strong>Flouci</strong>
+      </div>
+      <p class="redirect-info">
+        Vous serez redirigé vers la plateforme Flouci pour finaliser votre paiement
+      </p>
+    </div>
+
+    <!-- BOUTONS -->
+    <button class="pay-btn"
+            (click)="pay()"
+            [disabled]="loading">
+      <span *ngIf="!loading">💳 Payer {{ amount }} TND</span>
+      <span *ngIf="loading">⏳ Redirection en cours...</span>
+    </button>
+
+    <button class="cancel-btn" (click)="cancel()">
+      ✕ Annuler et retourner aux réservations
+    </button>
+
+    <!-- BOOKING ID pour référence -->
+    <p class="booking-ref" *ngIf="bookingId">
+      Référence réservation : <strong>#{{ bookingId }}</strong>
+    </p>
+
+  </div>
+</div>

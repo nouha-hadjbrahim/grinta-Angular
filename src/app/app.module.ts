@@ -1,7 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+<<<<<<< HEAD
+import { FormsModule } from '@angular/forms';
+=======
 import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+>>>>>>> 0fcf05b2a640090e43128f51f2c74c3d5fe0bf34
 import { CommonModule } from '@angular/common';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { HttpClientModule } from '@angular/common/http';
@@ -25,7 +29,9 @@ import { BookingsComponent } from './features/bookings/bookings-main/bookings.co
 import { NutritionComponent } from './features/nutrition/nutrition-main/nutrition.component';
 import { CommunityComponent } from './features/community/community-main/community.component';
 import { WorkoutsComponent } from './features/workouts/workouts-main/workouts.component';
-
+import { PaymentComponent } from './features/bookings/payment/payment.component';
+import { PaymentSuccessComponent } from './features/bookings/payment-success/payment-success.component';
+import { PaymentFailComponent } from './features/bookings/payment-fail/payment-fail.component';
 
 @NgModule({
   declarations: [
@@ -46,12 +52,21 @@ import { WorkoutsComponent } from './features/workouts/workouts-main/workouts.co
     WorkoutsComponent,
     NutritionComponent,
     CommunityComponent,
-    
+    PaymentComponent,
+    PaymentSuccessComponent,
+    PaymentFailComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+<<<<<<< HEAD
+    CommonModule,
+    HttpClientModule,
+    RouterModule
+  ],
+  providers: [],
+=======
     ReactiveFormsModule,
     CommonModule,  
     HttpClientModule,
@@ -65,6 +80,7 @@ import { WorkoutsComponent } from './features/workouts/workouts-main/workouts.co
       multi: true
     }
   ],
+>>>>>>> 0fcf05b2a640090e43128f51f2c74c3d5fe0bf34
   bootstrap: [AppComponent]
 })
 export class AppModule { }
