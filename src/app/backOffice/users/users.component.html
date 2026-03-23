@@ -1,0 +1,206 @@
+<div class="users-container">
+  <!-- Header -->
+  <div class="users-header">
+    <div class="header-title">
+      <h1>Users Management</h1>
+      <p class="header-subtitle">Manage and organize your users management</p>
+    </div>
+    <div class="header-actions">
+      <div class="search-box">
+        <input
+          type="text"
+          placeholder="Search..."
+          [(ngModel)]="searchTerm"
+          (input)="searchUsers(searchTerm)"
+          class="search-input"
+        />
+        <i class="bi bi-search search-icon"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading users...</p>
+  </div>
+
+  <!-- Users Table -->
+  <div *ngIf="!loading" class="table-wrapper">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th class="col-photo"> </th>
+          <th class="col-name">Name</th>
+          <th class="col-email">Email</th>
+          <th class="col-role">Role</th>
+          <th class="col-status">Status</th>
+          <th class="col-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of paginatedUsers" class="table-row">
+          <!-- Photo -->
+          <td class="col-photo">
+            <img [src]="getPhotoUrl(user.photo)" [alt]="user.name" class="user-photo" />
+          </td>
+
+          <!-- Name -->
+          <td class="col-name">{{ user.name }}</td>
+
+          <!-- Email -->
+          <td class="col-email">{{ user.email }}</td>
+
+          <!-- Role -->
+          <td class="col-role">{{ user.role }}</td>
+
+          <!-- Status Badge -->
+          <td class="col-status">
+            <span [ngClass]="['status-badge', getStatusClass(user.status)]">
+              {{ user.status }}
+            </span>
+          </td>
+
+          <!-- Actions -->
+          <td class="col-actions">
+            <button
+              class="action-btn edit-btn"
+              (click)="openUpdateModal(user)"
+              title="Edit User"
+            >
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button
+              class="action-btn info-btn"
+              (click)="viewUserDetails(user)"
+              title="View Details"
+            >
+              <i class="bi bi-info-circle"></i>
+            </button>
+            <button
+              class="action-btn delete-btn"
+              (click)="deleteUser(user)"
+              title="Delete User"
+            >
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+
+        <!-- Empty State -->
+        <tr *ngIf="paginatedUsers.length === 0" class="empty-state">
+          <td colspan="6">No users found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!loading && filteredUsers.length > 0" class="pagination-container">
+    <div class="pagination-info">
+      Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to
+      {{ getPaginationEndIndex() }} of
+      {{ filteredUsers.length }} results
+    </div>
+
+    <div class="pagination-controls">
+      <button
+        class="pagination-btn"
+        (click)="previousPage()"
+        [disabled]="currentPage === 1"
+      >
+        ← Previous
+      </button>
+
+      <div class="page-numbers">
+        <button
+          *ngFor="let page of getPageNumbers()"
+          class="page-btn"
+          [class.active]="page === currentPage"
+          (click)="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+      </div>
+
+      <button
+        class="pagination-btn"
+        (click)="nextPage()"
+        [disabled]="currentPage === totalPages"
+      >
+        Next →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- User Details Modal -->
+<div *ngIf="showModal" class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>User Details</h2>
+      <button class="close-btn" (click)="closeModal()">✕</button>
+    </div>
+
+    <div *ngIf="selectedUserDetails" class="modal-body">
+      <!-- Photo -->
+      <div class="detail-photo">
+        <img
+          [src]="getPhotoUrl(selectedUserDetails.photo)"
+          [alt]="selectedUserDetails.name"
+          class="detail-image"
+        />
+      </div>
+
+      <!-- Details -->
+      <div class="detail-grid">
+        <div class="detail-item">
+          <label>Name:</label>
+          <span>{{ selectedUserDetails.name }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Email:</label>
+          <span>{{ selectedUserDetails.email }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Phone:</label>
+          <span>+216 {{ selectedUserDetails.phoneNumber || 'N/A' }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Role:</label>
+          <span>{{ selectedUserDetails.role }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Status:</label>
+          <span
+            [ngClass]="[
+              'status-badge',
+              getStatusClass(selectedUserDetails.status)
+            ]"
+          >
+            {{ selectedUserDetails.status }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+ 
+  </div>
+</div>
+
+<!-- Update User Modal -->
+<app-update-user
+  [isOpen]="showUpdateModal"
+  [user]="userToUpdate"
+  (close)="closeUpdateModal()"
+  (userUpdated)="onUserUpdated()"
+></app-update-user>

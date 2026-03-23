@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SignInComponent } from './sign-in/sign-in.component';
+import { SignUpComponent } from './sign-up/sign-up.component';
 import { MainComponent } from './core/main/main.component';
 import { HomeComponent } from './features/home/home-main/home.component';
 import { EventsComponent } from './features/events/events-main/events.component';
@@ -11,13 +12,15 @@ import { WorkoutsComponent } from './features/workouts/workouts-main/workouts.co
 import { NutritionComponent } from './features/nutrition/nutrition-main/nutrition.component';
 import { CommunityComponent } from './features/community/community-main/community.component';
 import { AuthGuard } from './guards/auth.guard';
+import { RoleGuard } from './guards/role.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'sign-in', pathMatch: 'full' },
   { path: 'sign-in', component: SignInComponent },
+  { path: 'sign-up', component: SignUpComponent },
   {
     path: 'main', component: MainComponent,
-    // canActivate: [AuthGuard], // TODO: enable when auth is ready
+    canActivate: [AuthGuard],
     children: [
       { path: '', component: HomeComponent },
       { path: 'events', component: EventsComponent },
@@ -28,6 +31,11 @@ const routes: Routes = [
       { path: 'nutrition', component: NutritionComponent },
       { path: 'community', component: CommunityComponent },
     ]
+  },
+  {
+    path: 'admin',
+    canActivate: [RoleGuard],
+    loadChildren: () => import('./backOffice/backoffice.module').then(m => m.BackofficeModule)
   }
 ];
 
