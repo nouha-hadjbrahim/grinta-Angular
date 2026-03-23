@@ -1,1 +1,230 @@
-<p>bookings works!</p>
+<div class="booking-wrapper">
+
+  <!-- TOAST -->
+  <div class="toast-notification" *ngIf="toast"
+       [class.toast-success]="toast.type === 'success'"
+       [class.toast-error]="toast.type === 'error'">
+    {{ toast.message }}
+  </div>
+
+  <!-- MODALE CONFIRMATION CANCEL -->
+  <div class="modal-overlay" *ngIf="showCancelModal">
+    <div class="modal-box">
+      <h3>Annuler la réservation ?</h3>
+      <p>Cette action marquera votre réservation comme
+        <strong>CANCELLED</strong>.
+        Elle restera visible dans votre historique.
+      </p>
+      <div class="modal-actions">
+        <button class="modal-btn-confirm" (click)="confirmCancel()">
+          Oui, annuler
+        </button>
+        <button class="modal-btn-cancel" (click)="closeCancelModal()">
+          Non, garder
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEFT -->
+  <div class="booking-left">
+
+    <!-- TABS -->
+    <div class="tabs-bar">
+      <button [class.tab-active]="activeTab === 'book'"
+              (click)="activeTab = 'book'; resetForm()">
+        📅 {{ editingId ? 'Edit Booking' : 'Book a Venue' }}
+      </button>
+
+      <button [class.tab-active]="activeTab === 'mybookings'"
+              (click)="activeTab = 'mybookings'">
+        📋 My Bookings
+        <span class="tab-badge" *ngIf="activeBookings.length > 0">
+          {{ activeBookings.length }}
+        </span>
+      </button>
+
+      <button [class.tab-active]="activeTab === 'history'"
+              (click)="activeTab = 'history'">
+        🕐 Historique
+        <span class="tab-badge-grey" *ngIf="historyBookings.length > 0">
+          {{ historyBookings.length }}
+        </span>
+      </button>
+    </div>
+
+    <!-- ===== TAB BOOK / EDIT ===== -->
+    <ng-container *ngIf="activeTab === 'book'">
+
+      <h1 class="booking-title">
+        {{ editingId ? 'Edit' : 'Book a' }} <span>Venue</span>
+      </h1>
+      <p class="booking-subtitle">
+        Reserve sports terrains and facilities across Tunisia
+      </p>
+
+      <!-- STEP 1 -->
+      <h3 class="step-label">Step 1: Select Venue</h3>
+      <div class="terrain-grid">
+        <div class="terrain-card"
+             *ngFor="let t of terrains"
+             (click)="selectTerrain(t)"
+             [class.active]="selectedTerrain?.id === t.id"
+             [class.terrain-full]="getTerrainStatus(t) === 'full'">
+          <h3>{{ t.name }}</h3>
+          <p class="terrain-type">{{ t.type }}</p>
+          <p class="terrain-location">📍 {{ t.location }}</p>
+          <p class="terrain-price">{{ t.price }} TND</p>
+          <div class="slots-bar">
+            <div class="slots-fill"
+                 [style.width.%]="((t.availableSlots ?? t.capacity) / t.capacity) * 100"
+                 [class.slots-green]="getTerrainStatus(t) === 'available'"
+                 [class.slots-orange]="getTerrainStatus(t) === 'almost'"
+                 [class.slots-red]="getTerrainStatus(t) === 'full'">
+            </div>
+          </div>
+          <p class="slots-label">{{ getStatusLabel(t) }}</p>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <h3 class="step-label">Step 2: Select Date</h3>
+      <input type="date"
+             [(ngModel)]="selectedDate"
+             (ngModelChange)="onDateChange()"
+             [min]="today"
+             class="date-input">
+
+      <!-- STEP 3 -->
+      <h3 class="step-label">Step 3: Select Time</h3>
+      <p *ngIf="!selectedTerrain || !selectedDate"
+         style="color:#aaa; font-size:14px">
+        ⚠️ Select a venue and date first to see available times.
+      </p>
+      <div class="times-grid" *ngIf="selectedTerrain && selectedDate">
+        <p *ngIf="times.length === 0" style="color:#ff2d2d; font-size:14px">
+          🚫 Aucun créneau disponible pour cette date.
+        </p>
+        <button class="time-btn"
+                *ngFor="let t of times"
+                (click)="selectedTime = t"
+                [class.active]="selectedTime === t">
+          {{ t }}
+        </button>
+      </div>
+
+      <button *ngIf="editingId" (click)="resetForm()"
+              style="margin-top:20px; background:transparent;
+                     border:1px solid #555; color:#aaa;
+                     padding:8px 20px; border-radius:8px; cursor:pointer">
+        ✕ Cancel Edit
+      </button>
+
+    </ng-container>
+
+    <!-- ===== TAB MY BOOKINGS — CONFIRMED uniquement ===== -->
+    <ng-container *ngIf="activeTab === 'mybookings'">
+
+      <h1 class="booking-title">My <span>Bookings</span></h1>
+      <p class="booking-subtitle">Manage your active reservations</p>
+
+      <div *ngIf="activeBookings.length === 0"
+           style="color:#aaa; margin-top:30px">
+        Aucune réservation active. Réservez un terrain ! 🏟️
+      </div>
+
+      <div class="booking-item" *ngFor="let b of activeBookings">
+        <div>
+          <h4>{{ b.sportsTerrain?.name }}</h4>
+          <p style="color:#aaa; font-size:13px; margin:4px 0">
+            📅 {{ b.date }} &nbsp;&nbsp; 🕐 {{ b.time }}
+          </p>
+          <span class="status-badge badge-confirmed">{{ b.status }}</span>
+        </div>
+        <div class="booking-actions">
+          <button class="btn-edit" (click)="startEdit(b)">✏️ Edit</button>
+          <button class="btn-delete" (click)="openCancelModal(b.id)">
+            🗑️ Cancel
+          </button>
+        </div>
+      </div>
+
+    </ng-container>
+
+    <!-- ===== TAB HISTORIQUE — CANCELLED uniquement ===== -->
+    <ng-container *ngIf="activeTab === 'history'">
+
+      <h1 class="booking-title">Historique <span>Annulations</span></h1>
+      <p class="booking-subtitle">Vos réservations annulées</p>
+
+      <div *ngIf="historyBookings.length === 0"
+           style="color:#aaa; margin-top:30px">
+        Aucune annulation dans votre historique ✅
+      </div>
+
+      <div class="booking-item booking-cancelled"
+           *ngFor="let b of historyBookings">
+        <div>
+          <h4>{{ b.sportsTerrain?.name }}</h4>
+          <p style="color:#aaa; font-size:13px; margin:4px 0">
+            📅 {{ b.date }} &nbsp;&nbsp; 🕐 {{ b.time }}
+          </p>
+          <span class="status-badge badge-cancelled">{{ b.status }}</span>
+        </div>
+        <div class="booking-actions">
+          <span style="color:#555; font-size:13px; font-style:italic">
+            Annulée
+          </span>
+        </div>
+      </div>
+
+    </ng-container>
+
+  </div>
+
+  <!-- RIGHT — SUMMARY -->
+  <div class="booking-summary">
+    <h2>✅ Booking Summary</h2>
+    <div class="summary-row">
+      <span>Venue</span>
+      <strong>{{ selectedTerrain?.name || '-' }}</strong>
+    </div>
+    <div class="summary-row">
+      <span>Date</span>
+      <strong>{{ selectedDate || '-' }}</strong>
+    </div>
+    <div class="summary-row">
+      <span>Time</span>
+      <strong>{{ selectedTime || '-' }}</strong>
+    </div>
+    <div class="summary-row">
+      <span>Duration</span>
+      <strong>1 hour</strong>
+    </div>
+    <div class="summary-row">
+      <span>Capacity</span>
+      <strong>
+        {{ selectedTerrain ? selectedTerrain.capacity + ' players' : '-' }}
+      </strong>
+    </div>
+    <hr class="summary-divider">
+    <div class="summary-row">
+      <span>Subtotal</span>
+      <strong>{{ selectedTerrain ? subtotal + ' TND' : '-' }}</strong>
+    </div>
+    <div class="summary-row">
+      <span>Booking Fee</span>
+      <strong>5 TND</strong>
+    </div>
+    <div class="summary-row summary-total">
+      <span>Total</span>
+      <strong>{{ total }}</strong>
+    </div>
+    <button class="confirm-btn"
+            [disabled]="!selectedTerrain || !selectedDate || !selectedTime"
+            (click)="editingId ? saveEdit() : confirmBooking()">
+      {{ editingId ? '💾 Save Changes' : 'Confirm Booking' }}
+    </button>
+  </div>
+
+</div>

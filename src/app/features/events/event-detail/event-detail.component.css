@@ -1,0 +1,219 @@
+.detail-wrapper {
+  padding: 32px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Header */
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.btn-back {
+  background: transparent;
+  color: #aaa;
+  border: 1px solid #333;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.btn-back:hover { color: #fff; border-color: #fff; }
+
+.btn-edit {
+  background: #1a73e8;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn-edit:hover { background: #1558b0; }
+
+/* Hero */
+.detail-hero {
+  margin-bottom: 32px;
+}
+.hero-top {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.detail-hero h1 {
+  color: #fff;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+.event-name {
+  color: #888;
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Badges */
+.badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.badge-upcoming  { background: rgba(26,115,232,0.2);  color: #4da3ff; }
+.badge-ongoing   { background: rgba(30,142,62,0.2);   color: #4caf50; }
+.badge-completed { background: rgba(95,99,104,0.2);   color: #9aa0a6; }
+.badge-cancelled { background: rgba(217,48,37,0.2);   color: #ff6b6b; }
+
+.my-badge {
+  font-size: 12px;
+  color: #e63946;
+  border: 1px solid #e63946;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* Grid */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+/* Info card */
+.info-card {
+  background: #1a1a2e;
+  border: 1px solid #2a2a4a;
+  border-radius: 12px;
+  padding: 24px;
+  height: fit-content;
+}
+.info-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+.info-item:last-child { margin-bottom: 0; }
+.info-icon { font-size: 20px; }
+.info-label {
+  display: block;
+  color: #888;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+.info-value {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* Description card */
+.description-card {
+  background: #1a1a2e;
+  border: 1px solid #2a2a4a;
+  border-radius: 12px;
+  padding: 24px;
+}
+.description-card h3 {
+  color: #fff;
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+.description-card p {
+  color: #aaa;
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+/* Progress */
+.progress-section { margin-bottom: 20px; }
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  color: #888;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+.progress-bar {
+  background: #2a2a4a;
+  border-radius: 4px;
+  height: 8px;
+}
+.progress-fill {
+  background: #e63946;
+  border-radius: 4px;
+  height: 8px;
+  transition: width 0.3s;
+}
+.progress-fill.danger { background: #ff4444; }
+
+/* Tags */
+.tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.tag {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: #fff;
+}
+
+/* Register */
+.register-section { margin-top: 20px; }
+.btn-register {
+  width: 100%;
+  padding: 14px;
+  background: #e63946;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+  transition: background 0.2s;
+}
+.btn-register:hover:not(:disabled) { background: #c1121f; }
+.btn-register:disabled {
+  background: #333;
+  color: #666;
+  cursor: not-allowed;
+}
+
+/* Registrations */
+.registrations-section {
+  background: #1a1a2e;
+  border: 1px solid #2a2a4a;
+  border-radius: 12px;
+  padding: 24px;
+}
+.registrations-section h3 {
+  color: #fff;
+  font-size: 18px;
+  margin: 0 0 16px;
+}
+.registration-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #2a2a4a;
+}
+.registration-item:last-child { border-bottom: none; }
+.reg-email { color: #fff; font-size: 14px; }
+.reg-date  { color: #888; font-size: 13px; }
+
+.reg-status { padding: 3px 8px; border-radius: 20px; font-size: 11px; }
+.status-confirmed  { background: rgba(30,142,62,0.2);  color: #4caf50; }
+.status-cancelled  { background: rgba(217,48,37,0.2);  color: #ff6b6b; }
+.status-waitlisted { background: rgba(255,152,0,0.2);  color: #ff9800; }
+
+.empty-reg { color: #555; font-size: 14px; text-align: center; padding: 20px; }
+.loading   { text-align: center; padding: 60px; color: #555; }

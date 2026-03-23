@@ -1,0 +1,66 @@
+<div class="edit-wrapper">
+
+  <div class="edit-header">
+    <button class="btn-back" (click)="cancel()">← Retour</button>
+    <h1>Modifier l'événement</h1>
+  </div>
+
+  <div class="edit-form">
+
+    <div class="form-group">
+      <label>Titre *</label>
+      <input type="text"
+             [(ngModel)]="formEvent.title"
+             placeholder="Titre de l'événement"/>
+    </div>
+
+    <div class="form-group">
+      <label>Nom</label>
+      <input type="text"
+             [(ngModel)]="formEvent.name"
+             placeholder="Nom court"/>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Date *</label>
+        <input type="date" [(ngModel)]="formEvent.date"/>
+      </div>
+      <div class="form-group">
+        <label>Heure *</label>
+        <input type="time" [(ngModel)]="formEvent.time"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Lieu *</label>
+      <input type="text"
+             [(ngModel)]="formEvent.location"
+             placeholder="Ville, adresse..."/>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea [(ngModel)]="formEvent.description"
+                rows="4"
+                placeholder="Décrivez l'événement...">
+      </textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Max participants</label>
+      <input type="number"
+             [(ngModel)]="formEvent.maxParticipants"
+             min="1"/>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-cancel" (click)="cancel()">Annuler</button>
+      <button class="btn-save" (click)="saveEvent()">
+        Mettre à jour
+      </button>
+    </div>
+
+  </div>
+
+</div>

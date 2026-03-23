@@ -1,1 +1,81 @@
-<p>events works!</p>
+<div class="events-wrapper">
+
+  <!-- Header -->
+  <div class="events-header">
+    <h1>Événements</h1>
+    <div class="header-right">
+      <button class="btn-my-events"
+              [class.active]="showMyEvents"
+              (click)="showMyEvents = !showMyEvents">
+        {{ showMyEvents ? 'Tous les événements' : 'Mes événements' }}
+      </button>
+      <button class="btn-create" (click)="goToCreate()">
+        + Créer
+      </button>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <input class="search-input"
+         type="text"
+         placeholder="Rechercher..."
+         [(ngModel)]="searchText"/>
+
+  <!-- Liste -->
+  <div class="events-grid">
+    <div class="event-card"
+         *ngFor="let event of filteredEvents"
+         (click)="goToDetail(event.id!)">
+
+      <div class="card-top">
+        <span class="badge" [ngClass]="getStatusClass(event.status!)">
+          {{ event.status }}
+        </span>
+        <div class="card-actions" *ngIf="isMyEvent(event)">
+          <button (click)="openEdit(event); $event.stopPropagation()">✏️</button>
+          <button (click)="deleteEvent(event.id!); $event.stopPropagation()">🗑️</button>
+        </div>
+      </div>
+
+      <h3>{{ event.title }}</h3>
+
+      <p class="event-meta">
+        📅 {{ event.date | date:'dd/MM/yyyy' }} &nbsp;·&nbsp;
+        🕐 {{ event.time }} &nbsp;·&nbsp;
+        📍 {{ event.location }}
+      </p>
+
+      <p class="event-desc">{{ event.description }}</p>
+
+      <p class="event-places">
+        👥 {{ event.registrations?.length || 0 }} / {{ event.maxParticipants }} places
+      </p>
+
+      <div class="tags-row">
+        <span class="tag"
+              *ngFor="let tag of event.tags"
+              [style.background-color]="tag.color">
+          {{ tag.label }}
+        </span>
+      </div>
+
+      <div class="card-footer">
+        <button class="btn-register"
+                (click)="registerToEvent(event.id!); $event.stopPropagation()"
+                [disabled]="isFullEvent(event)">
+          {{ isFullEvent(event) ? 'Complet' : "S'inscrire" }}
+        </button>
+        <span class="my-badge" *ngIf="isMyEvent(event)">
+          Mon événement
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Aucun event -->
+  <div class="empty-state" *ngIf="filteredEvents.length === 0">
+    <p>Aucun événement trouvé.</p>
+  </div>
+
+</div>

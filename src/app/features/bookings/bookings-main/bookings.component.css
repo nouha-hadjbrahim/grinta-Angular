@@ -1,0 +1,437 @@
+/* WRAPPER */
+.booking-wrapper {
+  display: flex;
+  gap: 40px;
+  padding: 40px 60px;
+  color: white;
+  min-height: 100vh;
+  background: #0a0a0a;
+  align-items: flex-start;
+}
+
+/* LEFT */
+.booking-left {
+  flex: 2;
+}
+
+/* TITLE */
+.booking-title {
+  font-size: 42px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.booking-title span {
+  color: #ff2d2d;
+}
+
+.booking-subtitle {
+  color: #aaa;
+  margin-bottom: 30px;
+}
+
+/* TABS */
+.tabs-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.tabs-bar button {
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #1f2a37;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.3s;
+}
+
+.tabs-bar button.tab-active {
+  background: #ff2d2d;
+  color: white;
+  border-color: #ff2d2d;
+}
+
+.tab-badge {
+  background: white;
+  color: #ff2d2d;
+  border-radius: 50%;
+  padding: 1px 7px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 6px;
+}
+
+/* STEP LABEL */
+.step-label {
+  margin: 30px 0 15px;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+}
+
+/* TERRAIN GRID */
+.terrain-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* TERRAIN CARD */
+.terrain-card {
+  position: relative;
+  background: #1f2a36;
+  padding: 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+  color: white;
+  border: 2px solid transparent;
+  animation: fadeIn 0.4s ease;
+}
+
+.terrain-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+}
+
+.terrain-card.active {
+  border: 2px solid #ff2d2d;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+}
+
+.terrain-type {
+  color: #ff2d2d;
+  font-weight: 600;
+  margin: 4px 0;
+}
+
+.terrain-location {
+  color: #aaa;
+  font-size: 13px;
+}
+
+.terrain-price {
+  color: #ff2d2d;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.terrain-capacity {
+  color: #aaa;
+  font-size: 13px;
+}
+
+/* DATE */
+.date-input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #1f2a37;
+  color: white;
+  margin-top: 8px;
+}
+
+/* TIMES */
+.times-grid {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.time-btn {
+  width: 90px;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #1f2a37;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.time-btn:hover {
+  background: #ff2d2d;
+}
+
+.time-btn.active {
+  background: #ff2d2d;
+  box-shadow: 0 0 10px red;
+}
+
+/* SUMMARY (RIGHT) */
+.booking-summary {
+  flex: 1;
+  position: sticky;
+  top: 20px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  padding: 30px;
+  border-radius: 20px;
+  color: white;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 0;
+}
+
+.summary-total {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.summary-divider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  margin: 15px 0;
+}
+
+.confirm-btn {
+  width: 100%;
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 10px;
+  border: none;
+  background: white;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.confirm-btn:hover:not(:disabled) {
+  background: #eee;
+  transform: scale(1.05);
+}
+
+.confirm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* MY BOOKINGS */
+.booking-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1f2a36;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  animation: fadeIn 0.3s ease;
+}
+
+.booking-item h4 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  color: white;
+}
+
+.status-badge {
+  background: #16a34a;
+  color: white;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.booking-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-edit {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #ff2d2d;
+  background: transparent;
+  color: #ff2d2d;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-edit:hover {
+  background: #ff2d2d;
+  color: white;
+}
+
+.btn-delete {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #ff2d2d;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-delete:hover {
+  background: #cc0000;
+}
+
+/* ANIMATION */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* ✅ TOAST */
+.toast-notification {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+.toast-success {
+  background: #16a34a;
+  color: white;
+}
+
+.toast-error {
+  background: #ff2d2d;
+  color: white;
+}
+
+/* ✅ MODALE */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-box {
+  background: #1f2a36;
+  border: 1px solid #333;
+  border-radius: 16px;
+  padding: 36px;
+  max-width: 420px;
+  width: 90%;
+  color: white;
+  text-align: center;
+}
+
+.modal-box h3 {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.modal-box p {
+  color: #aaa;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.modal-btn-confirm {
+  padding: 10px 28px;
+  border-radius: 8px;
+  border: none;
+  background: #ff2d2d;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.modal-btn-confirm:hover {
+  background: #cc0000;
+}
+
+.modal-btn-cancel {
+  padding: 10px 28px;
+  border-radius: 8px;
+  border: 1px solid #555;
+  background: transparent;
+  color: #aaa;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.modal-btn-cancel:hover {
+  border-color: white;
+  color: white;
+}
+
+/* ✅ BOOKING CANCELLED style */
+.booking-cancelled {
+  opacity: 0.5;
+}
+
+/* ✅ STATUS BADGES */
+.badge-confirmed {
+  background: #16a34a !important;
+}
+
+.badge-cancelled {
+  background: #555 !important;
+  text-decoration: line-through;
+}
+/* Terrain complet — non cliquable */
+.terrain-full {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+}
+
+.terrain-full:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Barre de capacité */
+.slots-bar {
+  width: 100%;
+  height: 5px;
+  background: #333;
+  border-radius: 4px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.slots-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.slots-green  { background: #16a34a; }
+.slots-orange { background: #f97316; }
+.slots-red    { background: #ff2d2d; }
+
+.slots-label {
+  font-size: 12px;
+  margin-top: 5px;
+  color: #aaa;
+}
+/* Badge gris pour historique */
+.tab-badge-grey {
+  background: #555;
+  color: #ccc;
+  border-radius: 50%;
+  padding: 1px 7px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 6px;
+}

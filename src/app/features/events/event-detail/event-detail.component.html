@@ -1,0 +1,127 @@
+<div class="detail-wrapper" *ngIf="event">
+
+  <!-- Header -->
+  <div class="detail-header">
+    <button class="btn-back" (click)="goBack()">← Retour</button>
+    <div class="header-actions" *ngIf="isMyEvent()">
+      <button class="btn-edit" (click)="goToEdit()">✏️ Modifier</button>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="detail-hero">
+    <div class="hero-top">
+      <span class="badge" [ngClass]="getStatusClass()">
+        {{ event.status }}
+      </span>
+      <span class="my-badge" *ngIf="isMyEvent()">Mon événement</span>
+    </div>
+    <h1>{{ event.title }}</h1>
+    <p class="event-name">{{ event.name }}</p>
+  </div>
+
+  <!-- Infos -->
+  <div class="detail-grid">
+
+    <div class="info-card">
+      <div class="info-item">
+        <span class="info-icon">📅</span>
+        <div>
+          <span class="info-label">Date</span>
+          <span class="info-value">{{ event.date | date:'dd MMMM yyyy' }}</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">🕐</span>
+        <div>
+          <span class="info-label">Heure</span>
+          <span class="info-value">{{ event.time }}</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">📍</span>
+        <div>
+          <span class="info-label">Lieu</span>
+          <span class="info-value">{{ event.location }}</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">👥</span>
+        <div>
+          <span class="info-label">Participants</span>
+          <span class="info-value">
+            {{ registrations.length }} / {{ event.maxParticipants }} places
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="description-card">
+      <h3>Description</h3>
+      <p>{{ event.description }}</p>
+
+      <!-- Progress bar -->
+      <div class="progress-section">
+        <div class="progress-header">
+          <span>Places disponibles</span>
+          <span>{{ event.maxParticipants - registrations.length }} restantes</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill"
+               [style.width.%]="getProgressPercent()"
+               [class.danger]="getProgressPercent() > 80">
+          </div>
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div class="tags-row" *ngIf="event.tags && event.tags.length > 0">
+        <span class="tag"
+              *ngFor="let tag of event.tags"
+              [style.background-color]="tag.color">
+          {{ tag.label }}
+        </span>
+      </div>
+
+      <!-- Bouton inscription -->
+      <div class="register-section">
+        <button class="btn-register"
+                (click)="register()"
+                [disabled]="isAlreadyRegistered || isFullEvent()">
+          <span *ngIf="isAlreadyRegistered">✅ Déjà inscrit</span>
+          <span *ngIf="!isAlreadyRegistered && isFullEvent()">❌ Complet</span>
+          <span *ngIf="!isAlreadyRegistered && !isFullEvent()">S'inscrire</span>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Liste des inscrits -->
+  <div class="registrations-section" *ngIf="isMyEvent()">
+    <h3>Participants inscrits ({{ registrations.length }})</h3>
+    <div class="registrations-list">
+      <div class="registration-item"
+           *ngFor="let reg of registrations">
+        <span class="reg-email">{{ reg.userEmail || 'Participant' }}</span>
+        <span class="reg-date">
+          {{ reg.registrationDate | date:'dd/MM/yyyy' }}
+        </span>
+        <span class="reg-status" [ngClass]="'status-' + reg.status?.toLowerCase()">
+          {{ reg.status }}
+        </span>
+      </div>
+    </div>
+    <div class="empty-reg" *ngIf="registrations.length === 0">
+      Aucun inscrit pour l'instant.
+    </div>
+  </div>
+
+</div>
+
+<!-- Loading -->
+<div class="loading" *ngIf="!event">
+  <p>Chargement...</p>
+</div>
