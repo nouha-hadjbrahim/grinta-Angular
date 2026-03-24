@@ -25,11 +25,13 @@ import { WorkoutsComponent } from './features/workouts/workouts-main/workouts.co
 import { PaymentComponent } from './features/bookings/payment/payment.component';
 import { PaymentSuccessComponent } from './features/bookings/payment-success/payment-success.component';
 import { PaymentFailComponent } from './features/bookings/payment-fail/payment-fail.component';
+import { SignUpComponent } from './sign-up/sign-up.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SignInComponent,
+    SignUpComponent,
     MainComponent,
     HomeComponent,
     HeaderComponent,
