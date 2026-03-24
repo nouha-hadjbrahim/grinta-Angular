@@ -48,7 +48,7 @@ export class AuthService {
   }
 
   clearAuth(): void {
-    this.logout();
+    this.logout(); // réutilise ta méthode existante
   }
 
   setUserData(id: number, email: string): void {
@@ -80,16 +80,4 @@ export class AuthService {
     localStorage.removeItem(this.USER_EMAIL_KEY);
     localStorage.removeItem(this.USER_KEY);
   }
-  isTokenExpired(token: string): boolean {
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.exp * 1000 < Date.now();
-  } catch (e) {
-    return true;
-  }
-}
-
-clearAuth(): void {
-  this.logout(); // réutilise ta méthode existante
-}
 }
