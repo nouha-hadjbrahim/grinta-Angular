@@ -20,6 +20,7 @@ import { WorkoutsComponent } from './workouts/workouts.component';
 import { GymsComponent } from './gyms/gyms.component';
 import { TrainingComponent } from './training/training.component';
 import { NutritionComponent } from './nutrition/nutrition.component';
+
 import { CommunityComponent } from './community/community-main/community.component';
 
 // Shared Components
@@ -46,15 +47,17 @@ import { CommunityService } from './shared/services/community.service';
     TrainingComponent,
     NutritionComponent,
     AdminBookingsComponent,
-    CommunityComponent,
-    UsersComponent,
-    UpdateUserComponent,
     TableComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
-    BackofficeRoutingModule
+    BackofficeRoutingModule,
+
+    // composants standalone
+    UsersComponent,
+    UpdateUserComponent,
+    CommunityComponent
   ],
   providers: [
     UserService,
