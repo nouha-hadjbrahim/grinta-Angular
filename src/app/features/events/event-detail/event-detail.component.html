@@ -1,4 +1,4 @@
-<div class="detail-wrapper" *ngIf="event">
+<div class="detail-wrapper" *ngIf="event && !loading">
 
   <!-- Header -->
   <div class="detail-header">
@@ -50,7 +50,7 @@
         <div>
           <span class="info-label">Participants</span>
           <span class="info-value">
-            {{ registrations.length }} / {{ event.maxParticipants }} places
+            {{ event.registrations?.length || 0 }} / {{ event.maxParticipants }} places
           </span>
         </div>
       </div>
@@ -65,7 +65,7 @@
       <div class="progress-section">
         <div class="progress-header">
           <span>Places disponibles</span>
-          <span>{{ event.maxParticipants - registrations.length }} restantes</span>
+          <span>{{ (event.maxParticipants - (event.registrations?.length || 0)) }} restantes</span>
         </div>
         <div class="progress-bar">
           <div class="progress-fill"
@@ -79,8 +79,9 @@
       <div class="tags-row" *ngIf="event.tags && event.tags.length > 0">
         <span class="tag"
               *ngFor="let tag of event.tags"
-              [style.background-color]="tag.color">
-          {{ tag.label }}
+              [style.background-color]="tag.color"
+              [style.color]="isDarkColor(tag.color) ? '#fff' : '#000'">
+          #{{ tag.label }}
         </span>
       </div>
 
@@ -88,10 +89,11 @@
       <div class="register-section">
         <button class="btn-register"
                 (click)="register()"
-                [disabled]="isAlreadyRegistered || isFullEvent()">
-          <span *ngIf="isAlreadyRegistered">✅ Déjà inscrit</span>
-          <span *ngIf="!isAlreadyRegistered && isFullEvent()">❌ Complet</span>
-          <span *ngIf="!isAlreadyRegistered && !isFullEvent()">S'inscrire</span>
+                [disabled]="isUserRegistered() || isFullEvent()"
+                [class.btn-registered]="isUserRegistered()">
+          <span *ngIf="isUserRegistered()">✅ Déjà inscrit</span>
+          <span *ngIf="!isUserRegistered() && isFullEvent()">❌ Complet</span>
+          <span *ngIf="!isUserRegistered() && !isFullEvent()">📝 S'inscrire</span>
         </button>
       </div>
 
@@ -101,20 +103,20 @@
 
   <!-- Liste des inscrits -->
   <div class="registrations-section" *ngIf="isMyEvent()">
-    <h3>Participants inscrits ({{ registrations.length }})</h3>
+    <h3>Participants inscrits ({{ event.registrations?.length || 0 }})</h3>
     <div class="registrations-list">
       <div class="registration-item"
-           *ngFor="let reg of registrations">
-        <span class="reg-email">{{ reg.userEmail || 'Participant' }}</span>
+           *ngFor="let reg of event.registrations">
+        <span class="reg-email">{{ reg.userEmail || reg.user?.email || 'Participant' }}</span>
         <span class="reg-date">
           {{ reg.registrationDate | date:'dd/MM/yyyy' }}
         </span>
-        <span class="reg-status" [ngClass]="'status-' + reg.status?.toLowerCase()">
-          {{ reg.status }}
+        <span class="reg-status" [ngClass]="'status-' + (reg.status?.toLowerCase() || 'confirmed')">
+          {{ reg.status || 'CONFIRMED' }}
         </span>
       </div>
     </div>
-    <div class="empty-reg" *ngIf="registrations.length === 0">
+    <div class="empty-reg" *ngIf="!event.registrations || event.registrations.length === 0">
       Aucun inscrit pour l'instant.
     </div>
   </div>
@@ -122,6 +124,7 @@
 </div>
 
 <!-- Loading -->
-<div class="loading" *ngIf="!event">
-  <p>Chargement...</p>
+<div class="loading" *ngIf="loading || !event">
+  <div class="spinner"></div>
+  <p>Chargement des détails...</p>
 </div>

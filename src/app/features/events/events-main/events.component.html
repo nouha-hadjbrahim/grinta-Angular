@@ -21,8 +21,14 @@
          placeholder="Rechercher par titre ou lieu..."
          [(ngModel)]="searchText"/>
 
+  <!-- Loading indicator -->
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Chargement des événements...</p>
+  </div>
+
   <!-- Liste des événements -->
-  <div class="events-grid">
+  <div class="events-grid" *ngIf="!loading">
     <div class="event-card"
          *ngFor="let event of filteredEvents"
          (click)="goToDetail(event.id!)">
@@ -74,26 +80,24 @@
       </div>
 
       <!-- Pied de carte -->
-      <div class="card-footer">
-        <button class="btn-register"
-                (click)="registerToEvent(event.id!); $event.stopPropagation()"
-                [disabled]="isFullEvent(event)">
-          {{ isFullEvent(event) ? 'Complet' : "S'inscrire" }}
-        </button>
-        <span class="my-badge" *ngIf="isMyEvent(event)">
-          Mon événement
-        </span>
-      </div>
-
-    </div>
-  </div>
+<div class="card-footer">
+  <button class="btn-register"
+          (click)="registerToEvent(event); $event.stopPropagation()"
+          [disabled]="isUserRegistered(event) || isFullEvent(event)"
+          [class.btn-registered]="isUserRegistered(event)">
+    {{ isUserRegistered(event) ? 'Déjà inscrit' : (isFullEvent(event) ? 'Complet' : "S'inscrire") }}
+  </button>
+  <span class="my-badge" *ngIf="isMyEvent(event)">
+    Mon événement
+  </span>
+</div>
 
   <!-- Aucun événement -->
-  <div class="empty-state" *ngIf="filteredEvents.length === 0">
+  <div class="empty-state" *ngIf="!loading && filteredEvents.length === 0">
     <p *ngIf="showMyEvents && searchText">Aucun de vos événements ne correspond à la recherche.</p>
     <p *ngIf="showMyEvents && !searchText">Vous n'avez pas encore créé d'événement.</p>
     <p *ngIf="!showMyEvents && searchText">Aucun événement ne correspond à votre recherche.</p>
     <p *ngIf="!showMyEvents && !searchText">Aucun événement disponible pour le moment.</p>
   </div>
 
-</div>
+</div> <!-- Fermeture de events-wrapper -->
