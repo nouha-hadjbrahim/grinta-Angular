@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventService } from '../../../services/events/event.service';
-import { GrintaEvent, GrintaEventTag } from '../../../services/events/grinta-event.model';
+import { GrintaEvent, GrintaEventTag, GrintaEventRegistration } from '../../../services/events/grinta-event.model';
 import { AuthService } from '../../../services/User/auth.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-events-main',
@@ -14,6 +15,7 @@ export class EventsComponent implements OnInit {
   events: GrintaEvent[] = [];
   searchText = '';
   showMyEvents = false;
+  loading = false;  // Ajouté pour l'indicateur de chargement
 
   get currentUserId(): number | null {
     return this.authService.getCurrentUserId();
@@ -30,9 +32,43 @@ export class EventsComponent implements OnInit {
   }
 
   loadEvents(): void {
-    this.eventService.getAll().subscribe(data => {
-      this.events = data;
-      console.log('Events loaded:', this.events); // Pour déboguer
+    this.loading = true;
+    this.eventService.getAll().subscribe({
+      next: (data) => {
+        this.events = data;
+        // Charger les inscriptions pour chaque événement
+        this.loadRegistrationsForEvents();
+      },
+      error: (err) => {
+        console.error('Error loading events:', err);
+        this.loading = false;
+      }
+    });
+  }
+
+  // Charger les inscriptions pour tous les événements
+  loadRegistrationsForEvents(): void {
+    if (this.events.length === 0) {
+      this.loading = false;
+      return;
+    }
+
+    const registrationRequests = this.events.map(event => 
+      this.eventService.getRegistrations(event.id!)
+    );
+
+    forkJoin(registrationRequests).subscribe({
+      next: (registrationsList) => {
+        this.events.forEach((event, index) => {
+          event.registrations = registrationsList[index];
+        });
+        this.loading = false;
+        console.log('Events with registrations:', this.events);
+      },
+      error: (err) => {
+        console.error('Error loading registrations:', err);
+        this.loading = false;
+      }
     });
   }
 
@@ -68,14 +104,47 @@ export class EventsComponent implements OnInit {
     }
   }
 
-  registerToEvent(eventId: number): void {
-    const userId = this.currentUserId;
-    if (!userId) { alert('Vous devez être connecté !'); return; }
-    this.eventService.register(eventId, userId).subscribe({
-      next: () => { alert('Inscription réussie !'); this.loadEvents(); },
-      error: () => alert('Déjà inscrit ou événement complet')
-    });
+  registerToEvent(event: GrintaEvent): void {
+  const userId = this.currentUserId;
+  
+  // Vérifications avant l'appel API
+  if (!userId) { 
+    alert('Vous devez être connecté !'); 
+    return; 
   }
+  
+  // Vérifier si déjà inscrit
+  if (this.isUserRegistered(event)) {
+    alert('Vous êtes déjà inscrit à cet événement !');
+    return;
+  }
+  
+  // Vérifier si complet
+  if (this.isFullEvent(event)) {
+    alert('Cet événement est complet !');
+    return;
+  }
+  
+  this.eventService.register(event.id!, userId).subscribe({
+    next: (registration) => {
+      alert('Inscription réussie !');
+      // Mettre à jour localement l'événement
+      const targetEvent = this.events.find(e => e.id === event.id);
+      if (targetEvent) {
+        if (!targetEvent.registrations) {
+          targetEvent.registrations = [];
+        }
+        targetEvent.registrations.push(registration);
+        // Forcer le rafraîchissement du tableau
+        this.events = [...this.events];
+      }
+    },
+    error: (err) => {
+      console.error('Registration error:', err);
+      alert('Erreur lors de l\'inscription');
+    }
+  });
+}
 
   isMyEvent(event: GrintaEvent): boolean {
     return event.createdByUserId === this.currentUserId;
@@ -85,6 +154,24 @@ export class EventsComponent implements OnInit {
     if (!event.maxParticipants) return false;
     return (event.registrations?.length || 0) >= event.maxParticipants;
   }
+
+ isUserRegistered(event: GrintaEvent): boolean {
+  const userId = this.currentUserId;
+  if (!userId || !event.registrations) return false;
+  
+  // Vérifie la structure retournée par ton backend
+  return event.registrations.some(reg => {
+    // Si la registration a reg.userId (si tu as ajouté getUserId() dans backend)
+    if (reg.userId) {
+      return reg.userId === userId;
+    }
+    // Si la registration a reg.user.id (structure par défaut)
+    if (reg.user && reg.user.id) {
+      return reg.user.id === userId;
+    }
+    return false;
+  });
+}
 
   getStatusClass(status: string): string {
     const map: any = {
@@ -96,7 +183,6 @@ export class EventsComponent implements OnInit {
     return map[status] || '';
   }
 
-  // Méthode pour obtenir le style du tag (couleur de fond et texte)
   getTagStyle(tag: GrintaEventTag): any {
     const bgColor = tag.color || '#e63946';
     const isDark = this.isDarkColor(bgColor);
@@ -106,20 +192,15 @@ export class EventsComponent implements OnInit {
     };
   }
 
-  // Vérifie si une couleur est sombre pour adapter la couleur du texte
   isDarkColor(hex: string): boolean {
     if (!hex || !hex.startsWith('#')) return true;
-    
     let r = parseInt(hex.slice(1, 3), 16);
     let g = parseInt(hex.slice(3, 5), 16);
     let b = parseInt(hex.slice(5, 7), 16);
-    
-    // Formule de luminance
     const luminance = (0.299 * r + 0.587 * g + 0.114 * b);
     return luminance < 128;
   }
 
-  // Formate la date pour l'affichage
   formatDate(dateStr: string): string {
     if (!dateStr) return '';
     const date = new Date(dateStr);

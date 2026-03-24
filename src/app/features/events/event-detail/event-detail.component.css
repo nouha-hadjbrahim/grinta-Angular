@@ -217,3 +217,35 @@
 
 .empty-reg { color: #555; font-size: 14px; text-align: center; padding: 20px; }
 .loading   { text-align: center; padding: 60px; color: #555; }
+/* Styles supplémentaires pour le détail */
+.btn-register.btn-registered {
+  background: #2a2a4a;
+  color: #888;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btn-register.btn-registered:hover {
+  background: #2a2a4a;
+  transform: none;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #2a2a4a;
+  border-top-color: #e63946;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading {
+  text-align: center;
+  padding: 60px;
+  color: #888;
+}
