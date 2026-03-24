@@ -16,7 +16,8 @@ export class SidebarComponent {
     { label: 'Gym', icon: 'bi bi-building', route: '/admin/gyms' },
     { label: 'Training', icon: 'bi bi-mortarboard', route: '/admin/training' },
     { label: 'Nutrition', icon: 'bi bi-apple', route: '/admin/nutrition' },
-    { label: 'Community', icon: 'bi bi-chat-dots', route: '/admin/community' }
+    { label: 'Bookings', route: '/admin/bookings', icon: 'bi bi-calendar-check' },
+    { label: 'Community', icon: 'bi bi-chat-dots', route: '/admin/community' },
   ];
 
   activeRoute: string = '/admin';

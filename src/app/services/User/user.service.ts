@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { AuthService } from './auth.service';
+import { AuthService } from '../User/auth.service';
 
 export interface User {
   id?: number;
@@ -47,7 +47,7 @@ export class UserService {
     return this.http.post<AuthResponse>(`${this.authUrl}/sign-in`, { email, password }).pipe(
       tap(response => {
         this.authService.setToken(response.token);
-        this.authService.setUser(response.user);
+        this.authService.setUserData(response.user.id!, response.user.email);
       })
     );
   }
@@ -85,4 +85,3 @@ export class UserService {
     return this.http.put<User>(`${this.apiUrl}/${id}`, formData);
   }
 }
-

@@ -9,6 +9,7 @@ import { GymsComponent } from './gyms/gyms.component';
 import { TrainingComponent } from './training/training.component';
 import { NutritionComponent } from './nutrition/nutrition.component';
 import { CommunityComponent } from './community/community-main/community.component';
+import { AdminBookingsComponent } from './admin-bookings/admin-bookings.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: 'users', component: UsersComponent },
       { path: 'events', component: EventsComponent },
       { path: 'workouts', component: WorkoutsComponent },
+      { path: 'bookings', component: AdminBookingsComponent },
       { path: 'gyms', component: GymsComponent },
       { path: 'training', component: TrainingComponent },
       { path: 'nutrition', component: NutritionComponent },

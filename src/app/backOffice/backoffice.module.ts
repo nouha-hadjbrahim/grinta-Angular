@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BackofficeRoutingModule } from './backoffice-routing.module';
 
+// Components
+import { AdminBookingsComponent } from './admin-bookings/admin-bookings.component';
+
 // Layout Components
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
@@ -17,8 +20,7 @@ import { WorkoutsComponent } from './workouts/workouts.component';
 import { GymsComponent } from './gyms/gyms.component';
 import { TrainingComponent } from './training/training.component';
 import { NutritionComponent } from './nutrition/nutrition.component';
-
-import { CommunityComponent } from "./community/community-main/community.component";
+import { CommunityComponent } from './community/community-main/community.component';
 
 // Shared Components
 import { TableComponent } from './shared/components/table/table.component';
@@ -34,27 +36,25 @@ import { CommunityService } from './shared/services/community.service';
 
 @NgModule({
   declarations: [
-    // Layout
     MainLayoutComponent,
     SidebarComponent,
     NavbarComponent,
-    // Features
     DashboardComponent,
     EventsComponent,
     WorkoutsComponent,
     GymsComponent,
     TrainingComponent,
     NutritionComponent,
-    // Shared
+    AdminBookingsComponent,
+    CommunityComponent,
+    UsersComponent,
+    UpdateUserComponent,
     TableComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
-    BackofficeRoutingModule,
-    UsersComponent,
-    UpdateUserComponent,
-    CommunityComponent
+    BackofficeRoutingModule
   ],
   providers: [
     UserService,

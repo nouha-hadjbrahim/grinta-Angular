@@ -48,7 +48,7 @@ export class AuthService {
   }
 
   clearAuth(): void {
-    this.logout();
+    this.logout(); // réutilise ta méthode existante
   }
 
   setUserData(id: number, email: string): void {
