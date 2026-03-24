@@ -11,7 +11,7 @@ export * from './workouts/workouts.component';
 export * from './gyms/gyms.component';
 export * from './training/training.component';
 export * from './nutrition/nutrition.component';
-export * from './community/community.component';
+export * from './community/community-main/community.component';
 
 // Shared Components
 export * from './shared/components/table/table.component';

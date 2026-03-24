@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UserService } from '../../../services/user.service';
+import { UserService } from '../../../services/User/user.service';
 
 interface User {
   id?: number;
@@ -167,7 +167,7 @@ export class UpdateUserComponent implements OnInit {
           this.userUpdated.emit();
         }, 1500);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error updating user:', err);
         this.loading = false;
         if (err.status === 400) {

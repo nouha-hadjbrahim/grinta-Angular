@@ -200,8 +200,8 @@
           </div>
           <div class="post-content">
             <p>{{ post.content }}</p>
-            <!-- Show placeholder if no real image URL logic implemented, or use the post.imageUrl if available -->
-            <div *ngIf="post.imageUrl" class="image-placeholder" style="background-image: url('{{ post.imageUrl }}'); background-size: cover; background-position: center; border:none; color: transparent;">
+            <!-- Show placeholder if no real image URL logic implemented, or use the getAbsoluteImageUrl(post.images?.[0]?.imageUrl) if available -->
+            <div *ngIf="getAbsoluteImageUrl(post.images?.[0]?.imageUrl)" class="image-placeholder" style="background-image: url('{{ getAbsoluteImageUrl(post.images?.[0]?.imageUrl) }}'); background-size: cover; background-position: center; border:none; color: transparent;">
             </div>
           </div>
           <div class="post-actions">
