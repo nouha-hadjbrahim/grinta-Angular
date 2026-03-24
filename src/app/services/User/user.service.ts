@@ -46,6 +46,7 @@ export class UserService {
     return this.http.post<AuthResponse>(`${this.authUrl}/sign-in`, { email, password }).pipe(
       tap(response => {
         this.authService.setToken(response.token);
+        this.authService.setUser(response.user);
         this.authService.setUserData(response.user.id!, response.user.email);
       })
     );
