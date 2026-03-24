@@ -1,0 +1,254 @@
+<div class="admin-bookings-container">
+  
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1>📋 Gestion des Réservations</h1>
+      <p class="text-muted">Gérer toutes les demandes de réservation</p>
+    </div>
+    <button class="btn btn-refresh" (click)="loadBookings()">
+      🔄 Actualiser
+    </button>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-cards">
+    <div class="stat-card pending">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-content">
+        <p class="stat-label">En attente</p>
+        <h3 class="stat-value">{{ pendingCount }}</h3>
+      </div>
+    </div>
+    <div class="stat-card confirmed">
+      <div class="stat-icon">✅</div>
+      <div class="stat-content">
+        <p class="stat-label">Confirmées</p>
+        <h3 class="stat-value">{{ confirmedCount }}</h3>
+      </div>
+    </div>
+    <div class="stat-card cancelled">
+      <div class="stat-icon">❌</div>
+      <div class="stat-content">
+        <p class="stat-label">Annulées</p>
+        <h3 class="stat-value">{{ cancelledCount }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="filter-tabs">
+      <button 
+        class="filter-tab" 
+        [class.active]="selectedStatus === 'ALL'"
+        (click)="filterByStatus('ALL')">
+        Toutes ({{ bookings.length }})
+      </button>
+      <button 
+        class="filter-tab" 
+        [class.active]="selectedStatus === 'PENDING'"
+        (click)="filterByStatus('PENDING')">
+        En attente ({{ pendingCount }})
+      </button>
+      <button 
+        class="filter-tab" 
+        [class.active]="selectedStatus === 'CONFIRMED'"
+        (click)="filterByStatus('CONFIRMED')">
+        Confirmées ({{ confirmedCount }})
+      </button>
+      <button 
+        class="filter-tab" 
+        [class.active]="selectedStatus === 'CANCELLED'"
+        (click)="filterByStatus('CANCELLED')">
+        Annulées ({{ cancelledCount }})
+      </button>
+    </div>
+
+    <div class="filter-controls">
+      <input 
+        type="text" 
+        class="form-control search-input"
+        placeholder="🔍 Rechercher (nom, email, terrain, référence...)"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange()">
+      
+      <input 
+        type="date" 
+        class="form-control date-filter"
+        [(ngModel)]="selectedDate"
+        (ngModelChange)="onDateFilterChange()">
+      
+      <button class="btn btn-reset" (click)="resetFilters()">
+        ↻ Reset
+      </button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-container">
+    <div *ngIf="loading" class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Chargement...</p>
+    </div>
+
+    <div *ngIf="!loading && filteredBookings.length === 0" class="empty-state">
+      <p>📭 Aucune réservation trouvée</p>
+    </div>
+
+    <table *ngIf="!loading && filteredBookings.length > 0" class="bookings-table">
+      <thead>
+        <tr>
+          <th>Réf</th>
+          <th>Date</th>
+          <th>Heure</th>
+          <th>Client</th>
+          <th>Terrain</th>
+          <th>Type</th>
+          <th>Prix</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let booking of filteredBookings">
+          <td>
+            <span class="booking-ref">{{ booking.bookingReference }}</span>
+          </td>
+          <td>{{ booking.date }}</td>
+          <td>{{ booking.time }}</td>
+          <td>
+            <div class="user-info">
+              <strong>{{ booking.userName }}</strong>
+              <small>{{ booking.userEmail }}</small>
+            </div>
+          </td>
+          <td>
+            <div class="terrain-info">
+              <strong>{{ booking.terrainName }}</strong>
+              <small>{{ booking.terrainLocation }}</small>
+            </div>
+          </td>
+          <td>
+            <span class="terrain-type-badge">{{ booking.terrainType }}</span>
+          </td>
+          <td>{{ booking.price }} TND</td>
+          <td>
+            <span class="status-badge" [ngClass]="getStatusBadgeClass(booking.status)">
+              {{ getStatusLabel(booking.status) }}
+            </span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <!-- Actions pour PENDING -->
+              <ng-container *ngIf="booking.status === 'PENDING'">
+                <button 
+                  class="btn-action btn-approve" 
+                  (click)="openApproveModal(booking)"
+                  title="Approuver">
+                  ✓
+                </button>
+                <button 
+                  class="btn-action btn-reject" 
+                  (click)="openRejectModal(booking)"
+                  title="Rejeter">
+                  ✗
+                </button>
+              </ng-container>
+
+              <!-- Actions pour CONFIRMED -->
+              <ng-container *ngIf="booking.status === 'CONFIRMED'">
+                <button 
+                  class="btn-action btn-cancel" 
+                  (click)="openCancelModal(booking)"
+                  title="Annuler">
+                  🚫
+                </button>
+              </ng-container>
+
+              <!-- Delete pour tous -->
+              <button 
+                class="btn-action btn-delete" 
+                (click)="openDeleteModal(booking)"
+                title="Supprimer">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal Approve -->
+  <div class="modal" *ngIf="showApproveModal" (click)="closeModals()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>✅ Approuver la réservation</h3>
+      <p>Êtes-vous sûr de vouloir approuver cette réservation ?</p>
+      <div class="modal-details" *ngIf="selectedBooking">
+        <p><strong>Client :</strong> {{ selectedBooking.userName }}</p>
+        <p><strong>Terrain :</strong> {{ selectedBooking.terrainName }}</p>
+        <p><strong>Date :</strong> {{ selectedBooking.date }} à {{ selectedBooking.time }}</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" (click)="closeModals()">Annuler</button>
+        <button class="btn btn-success" (click)="confirmApprove()">Approuver</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Reject -->
+  <div class="modal" *ngIf="showRejectModal" (click)="closeModals()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>❌ Rejeter la réservation</h3>
+      <p>Êtes-vous sûr de vouloir rejeter cette réservation ?</p>
+      <div class="modal-details" *ngIf="selectedBooking">
+        <p><strong>Client :</strong> {{ selectedBooking.userName }}</p>
+        <p><strong>Terrain :</strong> {{ selectedBooking.terrainName }}</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" (click)="closeModals()">Annuler</button>
+        <button class="btn btn-danger" (click)="confirmReject()">Rejeter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Cancel -->
+  <div class="modal" *ngIf="showCancelModal" (click)="closeModals()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>🚫 Annuler la réservation</h3>
+      <p>Êtes-vous sûr de vouloir annuler cette réservation confirmée ?</p>
+      <div class="modal-details" *ngIf="selectedBooking">
+        <p><strong>Client :</strong> {{ selectedBooking.userName }}</p>
+        <p><strong>Terrain :</strong> {{ selectedBooking.terrainName }}</p>
+        <p class="warning">⚠️ Le slot redeviendra disponible.</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" (click)="closeModals()">Annuler</button>
+        <button class="btn btn-warning" (click)="confirmCancel()">Confirmer l'annulation</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Delete -->
+  <div class="modal" *ngIf="showDeleteModal" (click)="closeModals()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>🗑️ Supprimer la réservation</h3>
+      <p>Cette action est irréversible !</p>
+      <div class="modal-details" *ngIf="selectedBooking">
+        <p><strong>Référence :</strong> {{ selectedBooking.bookingReference }}</p>
+        <p class="warning">⚠️ La réservation sera supprimée définitivement.</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" (click)="closeModals()">Annuler</button>
+        <button class="btn btn-danger" (click)="confirmDelete()">Supprimer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" *ngIf="toast" [ngClass]="toast.type">
+    {{ toast.message }}
+  </div>
+
+</div>
