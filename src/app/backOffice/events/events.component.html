@@ -1,25 +1,141 @@
 <div class="events-container">
+
   <!-- Header -->
-  <div class="events-header">
-    <div class="header-title">
-      <h1>Events Management</h1>
-      <p class="header-subtitle">Manage and organize your events</p>
+  <div class="admin-header">
+    <h1>📊 Gestion des événements</h1>
+    <p>Administration complète de tous les événements de la plateforme</p>
+  </div>
+
+  <!-- Statistiques -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value">{{ stats.total }}</div>
+      <div class="stat-label">Total événements</div>
     </div>
-    <div class="header-actions">
-      <div class="search-box">
-        <input
-          type="text"
-          placeholder="Search..."
-          class="search-input"
-        />
-        <i class="bi bi-search search-icon"></i>
-      </div>
-      <button class="btn-add-new">+ Add New</button>
+    <div class="stat-card upcoming">
+      <div class="stat-value">{{ stats.upcoming }}</div>
+      <div class="stat-label">À venir</div>
+    </div>
+    <div class="stat-card ongoing">
+      <div class="stat-value">{{ stats.ongoing }}</div>
+      <div class="stat-label">En cours</div>
+    </div>
+    <div class="stat-card completed">
+      <div class="stat-value">{{ stats.completed }}</div>
+      <div class="stat-label">Terminés</div>
+    </div>
+    <div class="stat-card cancelled">
+      <div class="stat-value">{{ stats.cancelled }}</div>
+      <div class="stat-label">Annulés</div>
     </div>
   </div>
 
-  <!-- Content Area -->
-  <div class="content-placeholder">
-    <p>No events available</p>
+  <!-- Filtres -->
+  <div class="filters-bar">
+    <div class="filter-group">
+      <label>🔍 Recherche</label>
+      <input type="text"
+             placeholder="Titre, lieu..."
+             (input)="onSearchChange($any($event.target).value)"/>
+    </div>
+
+    <div class="filter-group">
+      <label>📌 Statut</label>
+      <select (change)="onStatusFilterChange($any($event.target).value)">
+        <option value="">Tous</option>
+        <option *ngFor="let status of getStatusOptions()" [value]="status">
+          {{ status }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>👤 Créateur</label>
+      <select (change)="onCreatorFilterChange($any($event.target).value)">
+        <option value="">Tous</option>
+        <option *ngFor="let creator of creators" [value]="creator.id">
+          {{ creator.name }}
+        </option>
+      </select>
+    </div>
   </div>
+
+  <!-- Loading -->
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Chargement des événements...</p>
+  </div>
+
+  <!-- Tableau des événements -->
+  <div class="events-table-wrapper" *ngIf="!loading">
+    <table class="events-table">
+      <thead>
+        <tr>
+          <th>Titre</th>
+          <th>Date</th>
+          <th>Lieu</th>
+          <th>Inscrits</th>
+          <th>Statut</th>
+          <th>Créateur</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let event of filteredEvents">
+          <td class="title-cell" (click)="viewEvent(event)">
+            {{ event.title || event.name }}
+          </td>
+          <td>
+            {{ formatDate(event.date) }} 
+            <span *ngIf="event.time">à {{ event.time }}</span>
+          </td>
+          <td>{{ event.location }}</td>
+          <td>
+            <span class="participants-count">
+              {{ event.registered || 0 }}/{{ event.maxParticipants || event.capacity }}
+            </span>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="getStatusClass(event.status)">
+              {{ event.status }}
+            </span>
+          </td>
+          <td class="creator-cell">
+            Utilisateur {{ event.createdByUserId }}
+          </td>
+          <td class="actions-cell">
+            <button class="btn-view" (click)="viewEvent(event)" title="Voir">
+              👁️
+            </button>
+            <button class="btn-edit" (click)="editEvent(event)" title="Modifier">
+              ✏️
+            </button>
+            <button class="btn-delete" (click)="deleteEvent(event)" title="Supprimer">
+              🗑️
+            </button>
+            <select class="status-select" (change)="changeStatus(event, $any($event.target).value)">
+              <option value="">Changer statut</option>
+              <option value="UPCOMING">À venir</option>
+              <option value="ONGOING">En cours</option>
+              <option value="COMPLETED">Terminé</option>
+              <option value="CANCELLED">Annulé</option>
+            </select>
+          </td>
+        </tr>
+        <tr *ngIf="filteredEvents.length === 0">
+          <td colspan="7" class="empty-row">
+            Aucun événement trouvé
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Bouton ajouter -->
+  <div class="add-button-container">
+    <button class="btn-add" (click)="onAddNew()">
+      + Créer un événement
+    </button>
+  </div>
+
 </div>
