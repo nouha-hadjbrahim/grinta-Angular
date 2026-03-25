@@ -22,6 +22,9 @@ import { TrainingComponent } from './training/training.component';
 import { NutritionComponent } from './nutrition/nutrition.component';
 
 import { CommunityComponent } from './community/community-main/community.component';
+import { EventCreateAdminComponent } from './events/event-create-admin/event-create-admin.component';
+import { EventEditAdminComponent } from './events/event-edit-admin/event-edit-admin.component';
+import { EventDetailAdminComponent } from './events/event-detail-admin/event-detail-admin.component';
 
 // Shared Components
 import { TableComponent } from './shared/components/table/table.component';
@@ -59,7 +62,10 @@ import { UpdateCommunityComponent } from './community/update-community/update-co
     AddChallengesComponent,
     UpdateChallengesComponent,
     AddCommunityComponent,
-    UpdateCommunityComponent
+    UpdateCommunityComponent,
+    EventCreateAdminComponent,
+    EventEditAdminComponent,
+    EventDetailAdminComponent
   ],
   imports: [
     CommonModule,

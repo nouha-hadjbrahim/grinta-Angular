@@ -15,7 +15,7 @@ export class EventsComponent implements OnInit {
   events: GrintaEvent[] = [];
   searchText = '';
   showMyEvents = false;
-  loading = false;  // Ajouté pour l'indicateur de chargement
+  loading = false;
 
   get currentUserId(): number | null {
     return this.authService.getCurrentUserId();
@@ -35,8 +35,8 @@ export class EventsComponent implements OnInit {
     this.loading = true;
     this.eventService.getAll().subscribe({
       next: (data) => {
+        console.log('📊 Events loaded:', data);
         this.events = data;
-        // Charger les inscriptions pour chaque événement
         this.loadRegistrationsForEvents();
       },
       error: (err) => {
@@ -46,7 +46,6 @@ export class EventsComponent implements OnInit {
     });
   }
 
-  // Charger les inscriptions pour tous les événements
   loadRegistrationsForEvents(): void {
     if (this.events.length === 0) {
       this.loading = false;
@@ -63,7 +62,7 @@ export class EventsComponent implements OnInit {
           event.registrations = registrationsList[index];
         });
         this.loading = false;
-        console.log('Events with registrations:', this.events);
+        console.log('✅ Events with registrations:', this.events);
       },
       error: (err) => {
         console.error('Error loading registrations:', err);
@@ -73,18 +72,24 @@ export class EventsComponent implements OnInit {
   }
 
   get filteredEvents(): GrintaEvent[] {
-    let list = this.events;
-    if (this.showMyEvents) {
-      list = list.filter(e => e.createdByUserId === this.currentUserId);
-    }
-    if (this.searchText.trim()) {
-      list = list.filter(e =>
-        e.title.toLowerCase().includes(this.searchText.toLowerCase()) ||
-        e.location.toLowerCase().includes(this.searchText.toLowerCase())
-      );
-    }
-    return list;
+  let list = this.events;
+
+  if (this.showMyEvents) {
+    list = list.filter(e =>
+      e.createdByUserId === this.currentUserId &&
+      !e.createdByAdmin  // ← exclure les events admin
+    );
   }
+
+  if (this.searchText.trim()) {
+    list = list.filter(e =>
+      e.title.toLowerCase().includes(this.searchText.toLowerCase()) ||
+      e.location.toLowerCase().includes(this.searchText.toLowerCase())
+    );
+  }
+
+  return list;
+}
 
   goToDetail(id: number): void {
     this.router.navigate(['/main/events', id]);
@@ -105,73 +110,67 @@ export class EventsComponent implements OnInit {
   }
 
   registerToEvent(event: GrintaEvent): void {
-  const userId = this.currentUserId;
-  
-  // Vérifications avant l'appel API
-  if (!userId) { 
-    alert('Vous devez être connecté !'); 
-    return; 
-  }
-  
-  // Vérifier si déjà inscrit
-  if (this.isUserRegistered(event)) {
-    alert('Vous êtes déjà inscrit à cet événement !');
-    return;
-  }
-  
-  // Vérifier si complet
-  if (this.isFullEvent(event)) {
-    alert('Cet événement est complet !');
-    return;
-  }
-  
-  this.eventService.register(event.id!, userId).subscribe({
-    next: (registration) => {
-      alert('Inscription réussie !');
-      // Mettre à jour localement l'événement
-      const targetEvent = this.events.find(e => e.id === event.id);
-      if (targetEvent) {
-        if (!targetEvent.registrations) {
-          targetEvent.registrations = [];
-        }
-        targetEvent.registrations.push(registration);
-        // Forcer le rafraîchissement du tableau
-        this.events = [...this.events];
-      }
-    },
-    error: (err) => {
-      console.error('Registration error:', err);
-      alert('Erreur lors de l\'inscription');
+    const userId = this.currentUserId;
+    
+    if (!userId) { 
+      alert('Vous devez être connecté !'); 
+      return; 
     }
-  });
-}
-
-  isMyEvent(event: GrintaEvent): boolean {
-    return event.createdByUserId === this.currentUserId;
+    
+    if (this.isUserRegistered(event)) {
+      alert('Vous êtes déjà inscrit à cet événement !');
+      return;
+    }
+    
+    if (this.isFullEvent(event)) {
+      alert('Cet événement est complet !');
+      return;
+    }
+    
+    this.eventService.register(event.id!, userId).subscribe({
+      next: (registration) => {
+        alert('Inscription réussie !');
+        const targetEvent = this.events.find(e => e.id === event.id);
+        if (targetEvent) {
+          if (!targetEvent.registrations) {
+            targetEvent.registrations = [];
+          }
+          targetEvent.registrations.push(registration);
+          this.events = [...this.events];
+        }
+      },
+      error: (err) => {
+        console.error('Registration error:', err);
+        alert('Erreur lors de l\'inscription');
+      }
+    });
   }
+
+ isMyEvent(event: GrintaEvent): boolean {
+  if (!event.createdByUserId) return false;
+  if (event.createdByAdmin) return false; // ← events admin exclus
+  return event.createdByUserId === this.currentUserId;
+}
 
   isFullEvent(event: GrintaEvent): boolean {
     if (!event.maxParticipants) return false;
     return (event.registrations?.length || 0) >= event.maxParticipants;
   }
 
- isUserRegistered(event: GrintaEvent): boolean {
-  const userId = this.currentUserId;
-  if (!userId || !event.registrations) return false;
-  
-  // Vérifie la structure retournée par ton backend
-  return event.registrations.some(reg => {
-    // Si la registration a reg.userId (si tu as ajouté getUserId() dans backend)
-    if (reg.userId) {
-      return reg.userId === userId;
-    }
-    // Si la registration a reg.user.id (structure par défaut)
-    if (reg.user && reg.user.id) {
-      return reg.user.id === userId;
-    }
-    return false;
-  });
-}
+  isUserRegistered(event: GrintaEvent): boolean {
+    const userId = this.currentUserId;
+    if (!userId || !event.registrations) return false;
+    
+    return event.registrations.some(reg => {
+      if (reg.userId) {
+        return reg.userId === userId;
+      }
+      if (reg.user && reg.user.id) {
+        return reg.user.id === userId;
+      }
+      return false;
+    });
+  }
 
   getStatusClass(status: string): string {
     const map: any = {

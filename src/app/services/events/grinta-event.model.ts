@@ -11,6 +11,7 @@ export interface GrintaEvent {
   tags?: GrintaEventTag[];
   registrations?: any[];
   createdByUserId?: number;
+  createdByAdmin?: boolean;
 }
 
 export interface GrintaEventTag {
