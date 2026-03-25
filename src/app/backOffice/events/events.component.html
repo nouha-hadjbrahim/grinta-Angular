@@ -44,7 +44,7 @@
       <select (change)="onStatusFilterChange($any($event.target).value)">
         <option value="">Tous</option>
         <option *ngFor="let status of getStatusOptions()" [value]="status">
-          {{ status }}
+          {{ getStatusLabel(status) }}
         </option>
       </select>
     </div>
@@ -97,7 +97,7 @@
           </td>
           <td>
             <span class="badge" [ngClass]="getStatusClass(event.status)">
-              {{ event.status }}
+              {{ getStatusLabel(event.status) }}
             </span>
           </td>
           <td class="creator-cell">

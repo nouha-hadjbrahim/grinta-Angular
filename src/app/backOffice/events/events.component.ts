@@ -159,12 +159,14 @@ export class EventsComponent implements OnInit {
     }
   }
 
+  // ✅ MODIFIÉ : Utiliser les routes admin
   viewEvent(event: Event): void {
-    this.router.navigate(['/main/events', event.id]);
+    this.router.navigate(['/admin/events/view', event.id]);
   }
 
+  // ✅ MODIFIÉ : Utiliser les routes admin
   editEvent(event: Event): void {
-    this.router.navigate(['/main/events/edit', event.id]);
+    this.router.navigate(['/admin/events/edit', event.id]);
   }
 
   deleteEvent(event: Event): void {
@@ -192,8 +194,9 @@ export class EventsComponent implements OnInit {
     }
   }
 
+  // ✅ MODIFIÉ : Utiliser les routes admin
   onAddNew(): void {
-    this.router.navigate(['/main/events/create']);
+    this.router.navigate(['/admin/events/create']);
   }
 
   getStatusClass(status: string): string {
@@ -214,5 +217,16 @@ export class EventsComponent implements OnInit {
 
   getStatusOptions(): string[] {
     return ['UPCOMING', 'ONGOING', 'COMPLETED', 'CANCELLED'];
+  }
+
+  // ✅ AJOUTÉ : Traduction des statuts en français
+  getStatusLabel(status: string): string {
+    const map: Record<string, string> = {
+      'UPCOMING': 'À venir',
+      'ONGOING': 'En cours',
+      'COMPLETED': 'Terminé',
+      'CANCELLED': 'Annulé'
+    };
+    return map[status] || status;
   }
 }

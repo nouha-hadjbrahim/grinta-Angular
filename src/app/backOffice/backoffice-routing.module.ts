@@ -11,6 +11,9 @@ import { NutritionComponent } from './nutrition/nutrition.component';
 import { CommunityComponent } from './community/community-main/community.component';
 import { AdminBookingsComponent } from './admin-bookings/admin-bookings.component';
 import { AddChallengesComponent } from './community/add-challenges/add-challenges.component';
+import { EventCreateAdminComponent } from './events/event-create-admin/event-create-admin.component';
+import { EventEditAdminComponent } from './events/event-edit-admin/event-edit-admin.component';
+import { EventDetailAdminComponent } from './events/event-detail-admin/event-detail-admin.component';
 
 const routes: Routes = [
   {
@@ -25,7 +28,10 @@ const routes: Routes = [
       { path: 'gyms', component: GymsComponent },
       { path: 'training', component: TrainingComponent },
       { path: 'nutrition', component: NutritionComponent },
-      { path: 'community', component: CommunityComponent }
+      { path: 'community', component: CommunityComponent },
+      { path: 'events/create', component: EventCreateAdminComponent },
+      { path: 'events/edit/:id', component: EventEditAdminComponent },
+      { path: 'events/view/:id', component: EventDetailAdminComponent }
     ]
   }
 ];
