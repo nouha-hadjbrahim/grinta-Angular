@@ -3,7 +3,34 @@
   <div class="community-header">
     <div class="header-title">
       <h1>Community & Challenges Management</h1>
-      <p class="header-subtitle">Manage and organize your community posts</p>
+      <p class="header-subtitle">Manage and organize your community posts, challenges, and groups</p>
+    </div>
+  </div>
+
+  <!-- Mini Navbar Tabs -->
+  <div class="community-tabs">
+    <button class="tab-btn" [class.active]="activeTab === 'posts'" (click)="setActiveTab('posts')">Posts</button>
+    <button class="tab-btn" [class.active]="activeTab === 'challenges'" (click)="setActiveTab('challenges')">Challenges</button>
+    <button class="tab-btn" [class.active]="activeTab === 'groups'" (click)="setActiveTab('groups')">Groups</button>
+  </div>
+
+  
+  <!-- TAB CONTENT: POSTS -->
+  <div *ngIf="activeTab === 'posts'">
+    <!-- Error Message -->
+    <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading posts...</p>
+  </div>
+
+  <div class="community-header" *ngIf="activeTab === 'posts'">
+    <div class="header-title">
+      <h1 style="font-size: 20px; color: #374151;">Active Posts</h1>
     </div>
     <div class="header-actions">
       <div class="search-box">
@@ -18,17 +45,6 @@
       </div>
       <button class="btn-add-new" (click)="openAddModal()">+ Add New Post</button>
     </div>
-  </div>
-
-  <!-- Error Message -->
-  <div *ngIf="error" class="error-message">
-    {{ error }}
-  </div>
-
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading-container">
-    <div class="spinner"></div>
-    <p>Loading posts...</p>
   </div>
 
   <!-- Posts Table -->
@@ -137,6 +153,19 @@
         Next →
       </button>
     </div>
+  </div>
+  </div> <!-- End of Posts Tab Content -->
+
+  <!-- TAB CONTENT: CHALLENGES -->
+  <div *ngIf="activeTab === 'challenges'">
+    <app-challenges-main></app-challenges-main>
+  </div>
+
+  <!-- TAB CONTENT: GROUPS -->
+  <div *ngIf="activeTab === 'groups'" class="tab-pane">
+    <div style="font-size: 3rem; margin-bottom: 20px;">👥</div>
+    <h3 style="color: #1f2937; margin-bottom: 10px;">Groups Management</h3>
+    <p>Group creation, member management, and discussions will be available soon.</p>
   </div>
 </div>
 

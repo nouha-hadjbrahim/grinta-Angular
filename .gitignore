@@ -46,3 +46,6 @@ Thumbs.db
 .env
 .env.*
 *.local
+
+# Uploaded images (if you want to ignore them, otherwise they should be served as static files)
+/uploads/

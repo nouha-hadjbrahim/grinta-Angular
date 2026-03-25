@@ -10,6 +10,7 @@ import { TrainingComponent } from './training/training.component';
 import { NutritionComponent } from './nutrition/nutrition.component';
 import { CommunityComponent } from './community/community-main/community.component';
 import { AdminBookingsComponent } from './admin-bookings/admin-bookings.component';
+import { AddChallengesComponent } from './community/add-challenges/add-challenges.component';
 
 const routes: Routes = [
   {

@@ -8,8 +8,7 @@ import { Post, PostImage } from '../../../services/Community/post.model';
   selector: 'app-update-community',
   templateUrl: './update-community.component.html',
   styleUrls: ['./update-community.component.css'],
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule]
+  
 })
 export class UpdateCommunityComponent implements OnInit, OnChanges {
   @Input() isOpen: boolean = false;

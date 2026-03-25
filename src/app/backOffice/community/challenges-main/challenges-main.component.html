@@ -1,0 +1,115 @@
+<div class="community-header">
+  <div class="header-title">
+    <h1 style="font-size: 20px; color: #374151;">Active Challenges</h1>
+  </div>
+  <div class="header-actions">
+    <div class="search-box">
+      <input
+        type="text"
+        placeholder="Search challenges..."
+        [(ngModel)]="searchTerm"
+        (input)="searchChallenges()"
+        class="search-input"
+      />
+      <i class="bi bi-search search-icon"></i>
+    </div>
+    <button class="btn-add-new" (click)="openAddModal()">
+      + Add New Challenge
+    </button>
+  </div>
+</div>
+
+<div *ngIf="isLoading" class="loading-container">
+  <div class="spinner"></div>
+  <p>Loading challenges...</p>
+</div>
+
+<div *ngIf="error" class="error-message">
+  {{ error }}
+</div>
+
+<div class="table-wrapper" *ngIf="!isLoading && !error">
+  <table class="community-table">
+    <thead>
+      <tr>
+        <th style="width: 20%;">Title</th>
+        <th style="width: 15%;">Type</th>
+        <th style="width: 10%;">Target</th>
+        <th style="width: 15%;">Reward</th>
+        <th style="width: 12%;">End Date</th>
+        <th style="width: 10%;">Participants</th>
+        <th style="width: 10%;">Trending</th>
+        <th class="col-actions" style="width: 10%;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let challenge of filteredChallenges" class="table-row">
+        <td style="font-weight: 600;">{{ challenge.title }}</td>
+        <td>
+          <span class="status-badge" [ngClass]="{'badge-active': challenge.type === 'FITNESS' || challenge.type === 'RUNNING', 'badge-inactive': challenge.type === 'NUTRITION'}">{{ challenge.type }}</span>
+        </td>
+        <td>{{ challenge.targetValue }}</td>
+        <td style="color: #6b7280;">{{ challenge.reward }}</td>
+        <td style="color: #6b7280;">{{ challenge.endDate | date:'shortDate' }}</td>
+        <td (click)="openViewModal(challenge, 'participants')" style="cursor: pointer; color: #10b981; font-weight: 500;" title="View Participants">
+          <i class="bi bi-people" style="margin-right:4px;"></i> {{ challenge.participantsCount || 0 }}
+        </td>
+        <td>
+          <span class="status-badge" [ngClass]="challenge.isTrending ? 'badge-active' : 'badge-inactive'">
+            {{ challenge.isTrending ? 'Yes' : 'No' }}
+          </span>
+        </td>
+        <td class="col-actions">
+          <button class="action-btn edit-btn" (click)="editChallenge(challenge.challengeId)" title="Edit Challenge">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button class="action-btn delete-btn" (click)="deleteChallenge(challenge.challengeId)" title="Delete Challenge">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="filteredChallenges.length === 0" class="empty-state">
+        <td colspan="9">No challenges found.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Add Challenge Modal -->
+<app-add-challenges 
+  [isOpen]="showAddModal" 
+  (close)="closeAddModal()" 
+  (challengeAdded)="onChallengeAdded()">
+</app-add-challenges>
+
+<!-- View Participants Modal -->
+<div class="modal-overlay" *ngIf="challengeToView" (click)="closeViewModal()">
+  <div class="modal-content view-modal" (click)="$event.stopPropagation()" style="max-height: 85vh; max-width: 900px; overflow-y: auto; width: 800px; padding: 25px; border-radius: 12px; background-color: #1e1e1e; border: 1px solid #333;">
+    
+    <div class="modal-header d-flex justify-content-between align-items-center mb-4" style="border-bottom: 1px solid #333; padding-bottom: 15px;">
+      <h2 style="margin: 0; color: #fff; font-size: 1.5rem;">
+        <span *ngIf="viewMode === 'participants'">Challenge Participants</span>
+      </h2>
+      <button class="btn-close-modal" (click)="closeViewModal()" style="background: none; border: none; color: #aaa; font-size: 1.5rem; cursor: pointer;">&times;</button>
+    </div>
+
+    <!-- Participants View -->
+    <div *ngIf="viewMode === 'participants'" class="view-likes">
+        <p style="color: #aaa; margin-bottom: 15px;">Total Participants: {{ challengeToView.participantsCount || 0 }}</p>
+        <ul *ngIf="participants && participants.length > 0; else noParticipants" style="list-style: none; padding: 0; margin: 0;">
+            <li *ngFor="let user of participants" style="padding: 10px 15px; background: #2a2a2a; border-radius: 6px; margin-bottom: 8px; color: #fff; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center;">
+                    <i class="bi bi-person-circle" style="font-size: 1.2rem; margin-right: 10px; color: #10b981;"></i>
+                    <span style="font-weight: 500; margin-right: 8px;">{{ user.name || 'Unknown User' }}</span>
+                </div>
+                <span style="color: #888; font-size: 0.9rem;">{{ user.email }}</span>
+            </li>
+        </ul>
+        <ng-template #noParticipants>
+            <p style="color: #888; text-align: center; padding: 20px; background: #2a2a2a; border-radius: 8px;">No participants have joined this challenge yet.</p>
+        </ng-template>
+    </div>
+
+  </div>
+</div>
+

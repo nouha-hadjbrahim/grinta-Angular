@@ -34,6 +34,12 @@ import { GymService } from './shared/services/gym.service';
 import { TrainingService } from './shared/services/training.service';
 import { NutritionService } from './shared/services/nutrition.service';
 import { CommunityService } from './shared/services/community.service';
+import { ChallengesMainComponent } from './community/challenges-main/challenges-main.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AddChallengesComponent } from './community/add-challenges/add-challenges.component';
+import { UpdateChallengesComponent } from './community/update-challenges/update-challenges.component';
+import { AddCommunityComponent } from './community/add-community/add-community.component';
+import { UpdateCommunityComponent } from './community/update-community/update-community.component';
 
 @NgModule({
   declarations: [
@@ -47,17 +53,23 @@ import { CommunityService } from './shared/services/community.service';
     TrainingComponent,
     NutritionComponent,
     AdminBookingsComponent, // ✅ ici (PAS dans imports)
-    TableComponent
+    TableComponent,
+    CommunityComponent,
+    ChallengesMainComponent,
+    AddChallengesComponent,
+    UpdateChallengesComponent,
+    AddCommunityComponent,
+    UpdateCommunityComponent
   ],
   imports: [
     CommonModule,
     FormsModule, // ✅ IMPORTANT pour ngModel
+    ReactiveFormsModule,
     BackofficeRoutingModule,
 
     // standalone components seulement ici
     UsersComponent,
-    UpdateUserComponent,
-    CommunityComponent
+    UpdateUserComponent
   ],
   providers: [
     UserService,
