@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';                           // ✅
+import { Router } from '@angular/router';
 import { BookingService } from '../../../services/booking.service';
 import { AuthService } from '../../../services/User/auth.service';
 
@@ -30,7 +30,7 @@ export class BookingsComponent implements OnInit {
   constructor(
     private bookingService: BookingService,
     private authService: AuthService,
-    private router: Router    // ✅ ajouté
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -39,14 +39,16 @@ export class BookingsComponent implements OnInit {
     this.loadMyBookings();
   }
 
+  // ✅ CORRECTION : My Bookings = PENDING + CONFIRMED
   get activeBookings(): any[] {
-    return this.myBookings.filter(b => b.status === 'CONFIRMED');
+    return this.myBookings.filter(b => 
+      b.status === 'CONFIRMED' || b.status === 'PENDING'
+    );
   }
 
+  // ✅ CORRECTION : Historique = CANCELLED uniquement
   get historyBookings(): any[] {
-    return this.myBookings.filter(b =>
-      b.status === 'CANCELLED' || b.status === 'PENDING'
-    );
+    return this.myBookings.filter(b => b.status === 'CANCELLED');
   }
 
   loadTerrains(): void {
