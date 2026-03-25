@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PostService } from '../../../services/Community/post.service';
 import { AuthService } from '../../../services/User/auth.service';
@@ -7,9 +6,7 @@ import { AuthService } from '../../../services/User/auth.service';
 @Component({
   selector: 'app-add-community',
   templateUrl: './add-community.component.html',
-  styleUrls: ['./add-community.component.css'],
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule]
+  styleUrls: ['./add-community.component.css']
 })
 export class AddCommunityComponent implements OnInit {
   @Input() isOpen: boolean = false;

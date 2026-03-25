@@ -1,17 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { PostService } from '../../../services/Community/post.service';
 import { Post, PostComment } from '../../../services/Community/post.model';
-import { AddCommunityComponent } from '../add-community/add-community.component';
-import { UpdateCommunityComponent } from '../update-community/update-community.component';
 
 @Component({
   selector: 'app-community',
   templateUrl: './community.component.html',
-  styleUrls: ['./community.component.css'],
-  standalone: true,
-  imports: [CommonModule, FormsModule, AddCommunityComponent, UpdateCommunityComponent]
+  styleUrls: ['./community.component.css']
 })
 export class CommunityComponent implements OnInit {
   posts: Post[] = [];
@@ -29,11 +24,26 @@ export class CommunityComponent implements OnInit {
   showAddModal: boolean = false;
   showUpdateModal: boolean = false;
   postToUpdate: Post | null = null;
+  
+  // Tabs
+  activeTab: string = 'posts';
 
-  constructor(private postService: PostService) {}
+  constructor(
+    private postService: PostService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['tab']) {
+        this.activeTab = params['tab'];
+      }
+    });
     this.loadPosts();
+  }
+
+  setActiveTab(tab: string): void {
+    this.activeTab = tab;
   }
 
   loadPosts(): void {
