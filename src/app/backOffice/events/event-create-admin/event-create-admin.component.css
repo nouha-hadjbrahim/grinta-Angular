@@ -1,9 +1,11 @@
+/* Container principal */
 .create-wrapper {
-  padding: 32px;
-  max-width: 600px;
+  padding: 24px;
+  max-width: 800px;
   margin: 0 auto;
 }
 
+/* Header */
 .create-header {
   display: flex;
   align-items: center;
@@ -12,9 +14,10 @@
 }
 
 .create-header h1 {
-  color: #fff;
-  font-size: 24px;
+  font-size: 28px;
+  font-weight: 700;
   margin: 0;
+  color: #fff;
   background: linear-gradient(135deg, #fff, #e63946);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -32,11 +35,12 @@
   transition: all 0.2s;
 }
 
-.btn-back:hover { 
-  color: #fff; 
-  border-color: #fff; 
+.btn-back:hover {
+  color: #fff;
+  border-color: #fff;
 }
 
+/* Form */
 .create-form {
   background: #1a1a2e;
   border: 1px solid #2a2a4a;
@@ -44,8 +48,8 @@
   padding: 32px;
 }
 
-.form-group { 
-  margin-bottom: 24px; 
+.form-group {
+  margin-bottom: 24px;
 }
 
 .form-group label {
@@ -71,8 +75,8 @@
 }
 
 .form-group input:focus,
-.form-group textarea:focus { 
-  border-color: #e63946; 
+.form-group textarea:focus {
+  border-color: #e63946;
 }
 
 .form-row {
@@ -112,12 +116,12 @@
   color: #666;
 }
 
-.char-count.near-limit { 
-  color: #e63946; 
+.char-count.near-limit {
+  color: #e63946;
 }
 
-.char-count.valid { 
-  color: #4caf50; 
+.char-count.valid {
+  color: #4caf50;
 }
 
 /* Tags */
@@ -127,13 +131,17 @@
   gap: 8px;
   margin-bottom: 12px;
   min-height: 40px;
+  padding: 8px;
+  background: #0d0d1a;
+  border-radius: 8px;
+  border: 1px solid #2a2a4a;
 }
 
 .tag-item {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 12px;
+  padding: 4px 10px;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 500;
@@ -151,8 +159,8 @@
   color: #fff;
   cursor: pointer;
   font-size: 10px;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
@@ -184,8 +192,8 @@
   outline: none !important;
 }
 
-.tag-input:focus { 
-  border-color: #e63946 !important; 
+.tag-input:focus {
+  border-color: #e63946 !important;
 }
 
 .tag-color {
@@ -211,9 +219,9 @@
   transition: all 0.2s;
 }
 
-.btn-add-tag:hover { 
-  border-color: #e63946; 
-  color: #e63946; 
+.btn-add-tag:hover {
+  border-color: #e63946;
+  color: #e63946;
   background: rgba(230, 57, 70, 0.1);
 }
 
@@ -239,8 +247,9 @@
   transition: background 0.2s;
 }
 
-.btn-save:hover { 
-  background: #c1121f; 
+.btn-save:hover {
+  background: #c1121f;
+  transform: translateY(-2px);
 }
 
 .btn-cancel {
@@ -253,93 +262,56 @@
   transition: all 0.2s;
 }
 
-.btn-cancel:hover { 
-  border-color: #888; 
-  color: #fff; 
-}
-
-/* Textarea */
-.form-group textarea {
-  resize: vertical;
-  min-height: 100px;
-  font-family: inherit;
-}
-
-/* Animation pour les erreurs */
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
-}
-
-.input-error:focus {
-  animation: shake 0.3s ease-in-out;
+.btn-cancel:hover {
+  border-color: #888;
+  color: #fff;
 }
 
 /* Responsive */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .create-wrapper {
     padding: 16px;
   }
-  
+
   .create-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
-  
+
   .create-header h1 {
-    font-size: 20px;
+    font-size: 24px;
   }
-  
+
   .create-form {
     padding: 20px;
   }
-  
+
   .form-row {
     grid-template-columns: 1fr;
     gap: 0;
   }
-  
+
   .tag-form {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .tag-color {
     width: 100% !important;
   }
-  
+
   .btn-add-tag {
     width: 100%;
   }
-  
+
   .form-actions {
     flex-direction: column-reverse;
   }
-  
+
   .btn-save,
   .btn-cancel {
     width: 100%;
     text-align: center;
   }
-}
-
-/* Scrollbar */
-.create-form::-webkit-scrollbar {
-  width: 8px;
-}
-
-.create-form::-webkit-scrollbar-track {
-  background: #0d0d1a;
-  border-radius: 4px;
-}
-
-.create-form::-webkit-scrollbar-thumb {
-  background: #e63946;
-  border-radius: 4px;
-}
-
-.create-form::-webkit-scrollbar-thumb:hover {
-  background: #c1121f;
 }

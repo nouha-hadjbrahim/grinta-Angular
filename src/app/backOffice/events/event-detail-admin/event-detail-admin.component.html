@@ -1,0 +1,197 @@
+<div class="detail-wrapper" *ngIf="event && !loading">
+
+  <!-- Header -->
+  <div class="detail-header">
+    <div class="header-left">
+      <h1>📋 Event Details</h1>
+      <p>View and manage all information for this event.</p>
+    </div>
+    <div class="header-right">
+      <button class="btn-back" (click)="goBack()">← Back</button>
+      <button class="btn-edit" (click)="goToEdit()">✏️ Edit</button>
+      <button class="btn-delete" (click)="deleteEvent()">🗑️ Delete</button>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value">{{ registrations.length }}</div>
+      <div class="stat-label">Participants</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ event.maxParticipants - registrations.length }}</div>
+      <div class="stat-label">Spots Left</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ event.maxParticipants }}</div>
+      <div class="stat-label">Max Capacity</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ event.tags?.length || 0 }}</div>
+      <div class="stat-label">Tags</div>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="hero-card">
+    <div class="hero-top">
+      <span class="badge" [ngClass]="getStatusClass(event.status)">
+        {{ getStatusLabel(event.status) }}
+      </span>
+      <span class="admin-badge" *ngIf="event.createdByAdmin">
+        👑 Created by Admin
+      </span>
+      <span class="user-badge" *ngIf="!event.createdByAdmin && event.createdByUserId">
+        👤 Created by User #{{ event.createdByUserId }}
+      </span>
+    </div>
+    <h1>{{ event.title }}</h1>
+    <p class="event-name">{{ event.name }}</p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn" [class.active]="activeTab === 'info'" (click)="activeTab = 'info'">
+      📋 Information
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'participants'" (click)="activeTab = 'participants'">
+      👥 Participants ({{ registrations.length }})
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'tags'" (click)="activeTab = 'tags'">
+      🏷️ Tags ({{ event.tags?.length || 0 }})
+    </button>
+  </div>
+
+  <!-- Tab: Information -->
+  <div class="tab-content" *ngIf="activeTab === 'info'">
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-item">
+          <span class="info-icon">📅</span>
+          <div>
+            <span class="info-label">Date</span>
+            <span class="info-value">{{ formatDate(event.date) }}</span>
+          </div>
+        </div>
+        <div class="info-item">
+          <span class="info-icon">🕐</span>
+          <div>
+            <span class="info-label">Time</span>
+            <span class="info-value">{{ event.time }}</span>
+          </div>
+        </div>
+        <div class="info-item">
+          <span class="info-icon">📍</span>
+          <div>
+            <span class="info-label">Location</span>
+            <span class="info-value">{{ event.location }}</span>
+          </div>
+        </div>
+        <div class="info-item">
+          <span class="info-icon">👥</span>
+          <div>
+            <span class="info-label">Participants</span>
+            <span class="info-value">
+              {{ registrations.length }} / {{ event.maxParticipants }} spots
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="description-card">
+        <h3>Description</h3>
+        <p>{{ event.description }}</p>
+
+        <div class="progress-section">
+          <div class="progress-header">
+            <span>Available Spots</span>
+            <span>{{ event.maxParticipants - registrations.length }} left</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill"
+                 [style.width.%]="getProgressPercent()"
+                 [class.danger]="getProgressPercent() > 80">
+            </div>
+          </div>
+        </div>
+
+        <div class="status-section">
+          <label>Change Status</label>
+          <div class="status-actions">
+            <button class="status-btn" (click)="changeStatus('UPCOMING')" [disabled]="event.status === 'UPCOMING'">Upcoming</button>
+            <button class="status-btn" (click)="changeStatus('ONGOING')" [disabled]="event.status === 'ONGOING'">Ongoing</button>
+            <button class="status-btn" (click)="changeStatus('COMPLETED')" [disabled]="event.status === 'COMPLETED'">Completed</button>
+            <button class="status-btn danger" (click)="changeStatus('CANCELLED')" [disabled]="event.status === 'CANCELLED'">Cancelled</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Participants -->
+  <div class="tab-content" *ngIf="activeTab === 'participants'">
+    <div class="participants-section">
+      <div class="participants-header">
+        <h3>Registered Participants</h3>
+        <span class="total-count">{{ registrations.length }} participant(s)</span>
+      </div>
+      
+      <div class="participants-list" *ngIf="registrations.length > 0">
+        <div class="participant-item" *ngFor="let reg of registrations">
+          <div class="participant-avatar">
+            👤
+          </div>
+          <div class="participant-info">
+            <div class="participant-name">
+              User {{ reg.user?.id || reg.userId || 'Unknown' }}
+            </div>
+            <div class="participant-email" *ngIf="reg.userEmail">
+              {{ reg.userEmail }}
+            </div>
+            <div class="participant-date">
+              Registered on {{ reg.registrationDate | date:'dd/MM/yyyy HH:mm' }}
+            </div>
+          </div>
+          <div class="participant-status">
+            <span class="status-badge" [ngClass]="'status-' + (reg.status?.toLowerCase() || 'confirmed')">
+              {{ reg.status || 'CONFIRMED' }}
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="empty-state" *ngIf="registrations.length === 0">
+        <p>No participants registered yet.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Tags -->
+  <div class="tab-content" *ngIf="activeTab === 'tags'">
+    <div class="tags-section">
+      <div class="tags-header">
+        <h3>Event Tags</h3>
+      </div>
+      
+      <div class="tags-list" *ngIf="event.tags && event.tags.length > 0">
+        <div class="tag-item" *ngFor="let tag of event.tags">
+          <span class="tag-color" [style.background-color]="tag.color"></span>
+          <span class="tag-label">#{{ tag.label }}</span>
+          <span class="tag-id">ID: {{ tag.id }}</span>
+        </div>
+      </div>
+      
+      <div class="empty-state" *ngIf="!event.tags || event.tags.length === 0">
+        <p>No tags for this event.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Loading -->
+<div class="loading" *ngIf="loading">
+  <div class="spinner"></div>
+  <p>Loading event details...</p>
+</div>

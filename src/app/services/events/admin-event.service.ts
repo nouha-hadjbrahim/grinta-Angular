@@ -43,4 +43,10 @@ export class AdminEventService {
   updateEvent(id: number, event: GrintaEvent): Observable<GrintaEvent> {
     return this.http.put<GrintaEvent>(`${this.userApiUrl}/${id}`, event);
   }
+   addTag(eventId: number, tag: any): Observable<any> {
+    return this.http.post(`${this.userApiUrl}/${eventId}/tags`, tag);
+  }
+  deleteTag(tagId: number): Observable<void> {
+  return this.http.delete<void>(`${this.userApiUrl}/tags/${tagId}`);
+}
 }
