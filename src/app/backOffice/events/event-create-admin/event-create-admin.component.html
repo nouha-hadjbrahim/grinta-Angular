@@ -1,28 +1,28 @@
 <div class="create-wrapper">
 
   <div class="create-header">
-    <button class="btn-back" (click)="cancel()">← Retour</button>
-    <h1>Créer un événement (Admin)</h1>
+    <button class="btn-back" (click)="cancel()">← Back</button>
+    <h1>Create Event</h1>
   </div>
 
   <div class="create-form">
 
-    <!-- Titre -->
+    <!-- Title -->
     <div class="form-group">
-      <label>Titre *</label>
+      <label>Title *</label>
       <input type="text"
              [(ngModel)]="formEvent.title"
-             placeholder="Titre de l'événement"
+             placeholder="Event title"
              [class.input-error]="errors.title"/>
       <span class="error-msg" *ngIf="errors.title">{{ errors.title }}</span>
     </div>
 
-    <!-- Nom -->
+    <!-- Name -->
     <div class="form-group">
-      <label>Nom <span class="hint">(max 30 caractères)</span></label>
+      <label>Name <span class="hint">(max 30 characters)</span></label>
       <input type="text"
              [(ngModel)]="formEvent.name"
-             placeholder="Nom court"
+             placeholder="Short name"
              maxlength="30"
              [class.input-error]="errors.name"/>
       <div class="input-footer">
@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <!-- Date & Heure -->
+    <!-- Date & Time -->
     <div class="form-row">
       <div class="form-group">
         <label>Date *</label>
@@ -45,7 +45,7 @@
         <span class="error-msg" *ngIf="errors.date">{{ errors.date }}</span>
       </div>
       <div class="form-group">
-        <label>Heure *</label>
+        <label>Time *</label>
         <input type="time"
                [(ngModel)]="formEvent.time"
                [class.input-error]="errors.time"/>
@@ -53,22 +53,22 @@
       </div>
     </div>
 
-    <!-- Lieu -->
+    <!-- Location -->
     <div class="form-group">
-      <label>Lieu *</label>
+      <label>Location *</label>
       <input type="text"
              [(ngModel)]="formEvent.location"
-             placeholder="Ville, adresse..."
+             placeholder="City, address..."
              [class.input-error]="errors.location"/>
       <span class="error-msg" *ngIf="errors.location">{{ errors.location }}</span>
     </div>
 
     <!-- Description -->
     <div class="form-group">
-      <label>Description * <span class="hint">(min 20 caractères)</span></label>
+      <label>Description * <span class="hint">(min 20 characters)</span></label>
       <textarea [(ngModel)]="formEvent.description"
                 rows="4"
-                placeholder="Décrivez l'événement..."
+                placeholder="Describe the event..."
                 [class.input-error]="errors.description">
       </textarea>
       <div class="input-footer">
@@ -82,7 +82,7 @@
 
     <!-- Max participants -->
     <div class="form-group">
-      <label>Max participants *</label>
+      <label>Max Participants *</label>
       <input type="number"
              [(ngModel)]="formEvent.maxParticipants"
              min="1"
@@ -96,7 +96,7 @@
     <div class="form-group">
       <label>Tags <span class="hint">(max 5 tags)</span></label>
 
-      <!-- Tags ajoutés -->
+      <!-- Added tags -->
       <div class="tags-preview" *ngIf="tags.length > 0">
         <span class="tag-item"
               *ngFor="let tag of tags; let i = index"
@@ -107,27 +107,27 @@
         </span>
       </div>
 
-      <!-- Formulaire ajout tag -->
+      <!-- Add tag form -->
       <div class="tag-form" *ngIf="tags.length < 5">
         <input type="text"
                [(ngModel)]="newTag.label"
-               placeholder="#sport, #gratuit, #outdoor..."
+               placeholder="#sport, #free, #outdoor..."
                maxlength="20"
                class="tag-input"/>
         <input type="color"
                [(ngModel)]="newTag.color"
                class="tag-color"/>
-        <button class="btn-add-tag" (click)="addTag()">+ Ajouter</button>
+        <button class="btn-add-tag" (click)="addTag()">+ Add Tag</button>
       </div>
       <span class="error-msg" *ngIf="tagError">{{ tagError }}</span>
-      <span class="hint" *ngIf="tags.length === 5">Maximum 5 tags atteint</span>
+      <span class="hint" *ngIf="tags.length === 5">Maximum 5 tags reached</span>
     </div>
 
     <!-- Actions -->
     <div class="form-actions">
-      <button class="btn-cancel" (click)="cancel()">Annuler</button>
+      <button class="btn-cancel" (click)="cancel()">Cancel</button>
       <button class="btn-save" (click)="saveEvent()">
-        Créer l'événement
+        Create Event
       </button>
     </div>
 

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AdminEventService } from '../../../services/events/admin-event.service';
 import { AuthService } from '../../../services/User/auth.service';
+import { forkJoin } from 'rxjs';
 
 interface GrintaEventTag {
   label: string;
@@ -99,22 +100,45 @@ export class EventCreateAdminComponent {
   }
 
   saveEvent(): void {
-  if (!this.validate()) return;
+    if (!this.validate()) return;
 
-  this.formEvent.createdByUserId = null;
-  this.formEvent.createdByAdmin = true; // ← ajoutez cette ligne
+    this.formEvent.createdByUserId = null;
+    this.formEvent.createdByAdmin = true;
 
-  this.adminEventService.createEvent(this.formEvent).subscribe({
-    next: () => {
-      alert('Événement créé avec succès !');
-      this.router.navigate(['/admin/events']);
-    },
-    error: (err) => {
-      console.error('Error:', err);
-      alert('Erreur lors de la création');
-    }
-  });
-}
+    // 1. Créer l'événement d'abord
+    this.adminEventService.createEvent(this.formEvent).subscribe({
+      next: (createdEvent) => {
+        console.log('✅ Événement créé:', createdEvent);
+        
+        // 2. Ajouter les tags si existants
+        if (this.tags.length > 0 && createdEvent.id) {
+          const tagRequests = this.tags.map(tag =>
+            this.adminEventService.addTag(createdEvent.id!, tag)
+          );
+          
+          forkJoin(tagRequests).subscribe({
+            next: (tags) => {
+              console.log('✅ Tags ajoutés:', tags);
+              alert('Événement créé avec succès !');
+              this.router.navigate(['/admin/events']);
+            },
+            error: (err) => {
+              console.error('❌ Error adding tags:', err);
+              alert('Événement créé mais erreur lors de l\'ajout des tags');
+              this.router.navigate(['/admin/events']);
+            }
+          });
+        } else {
+          alert('Événement créé avec succès !');
+          this.router.navigate(['/admin/events']);
+        }
+      },
+      error: (err) => {
+        console.error('❌ Error creating event:', err);
+        alert('Erreur lors de la création');
+      }
+    });
+  }
 
   cancel(): void {
     this.router.navigate(['/admin/events']);
