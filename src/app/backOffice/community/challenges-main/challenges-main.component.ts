@@ -91,11 +91,27 @@ export class ChallengesMainComponent implements OnInit {
     this.loadChallenges();
   }
 
+  // Update Modal logic
+  showUpdateModal = false;
+  challengeToUpdate: Challenge | null = null;
+
   editChallenge(id: number | undefined): void {
     if (id) {
-      // Assuming you have an update-challenges component route
-      this.router.navigate(['/admin/community/update-challenge', id]);
+      const challenge = this.challenges.find(c => c.challengeId === id);
+      if (challenge) {
+        this.challengeToUpdate = challenge;
+        this.showUpdateModal = true;
+      }
     }
+  }
+
+  closeUpdateModal(): void {
+    this.showUpdateModal = false;
+    this.challengeToUpdate = null;
+  }
+
+  onChallengeUpdated(): void {
+    this.loadChallenges();
   }
 
   openViewModal(challenge: Challenge, mode: 'details' | 'participants' = 'details'): void {
