@@ -46,15 +46,15 @@ import { CommunityService } from './shared/services/community.service';
     GymsComponent,
     TrainingComponent,
     NutritionComponent,
-    AdminBookingsComponent,
+    AdminBookingsComponent, // ✅ ici (PAS dans imports)
     TableComponent
   ],
   imports: [
     CommonModule,
-    FormsModule,
+    FormsModule, // ✅ IMPORTANT pour ngModel
     BackofficeRoutingModule,
 
-    // composants standalone
+    // standalone components seulement ici
     UsersComponent,
     UpdateUserComponent,
     CommunityComponent
