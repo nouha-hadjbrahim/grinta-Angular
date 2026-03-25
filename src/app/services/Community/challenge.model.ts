@@ -8,4 +8,5 @@ export interface Challenge {
   reward?: string;
   endDate?: string | Date;
   participantsCount?: number;
+  isJoined?: boolean; // Frontend state
 }

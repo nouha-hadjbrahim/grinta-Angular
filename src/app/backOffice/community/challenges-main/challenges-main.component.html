@@ -113,3 +113,11 @@
   </div>
 </div>
 
+
+<!-- Update Challenge Modal -->
+<app-update-challenges 
+  [isOpen]="showUpdateModal"
+  [challenge]="challengeToUpdate"
+  (close)="closeUpdateModal()" 
+  (challengeUpdated)="onChallengeUpdated()">
+</app-update-challenges>

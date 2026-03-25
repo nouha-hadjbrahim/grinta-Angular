@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { PostService } from '../../../services/Community/post.service';
 import { AuthService } from '../../../services/User/auth.service';
 import { Post, PostComment, CreateCommentRequest } from '../../../services/Community/post.model';
+import { ChallengeService } from '../../../services/Community/challenge.service';
+import { Challenge } from '../../../services/Community/challenge.model';
 
 @Component({
   selector: 'app-community',
@@ -10,6 +12,7 @@ import { Post, PostComment, CreateCommentRequest } from '../../../services/Commu
 })
 export class CommunityComponent implements OnInit {
   posts: Post[] = [];
+  challenges: Challenge[] = [];
   loading = true;
   error = '';
   currentUserId: number | null = null;
@@ -27,6 +30,7 @@ export class CommunityComponent implements OnInit {
 
   constructor(
     private postService: PostService,
+    private challengeService: ChallengeService,
     private authService: AuthService
   ) {}
 
@@ -34,6 +38,75 @@ export class CommunityComponent implements OnInit {
     this.currentUserId = this.authService.getCurrentUserId();
     this.currentUserEmail = this.authService.getCurrentUserEmail() || '';
     this.loadPosts();
+    this.loadChallenges();
+  }
+
+  loadChallenges(): void {
+    this.challengeService.getCommunityChallenges().subscribe({
+      next: (data) => {
+        // Sort challenges: trending first, then by earliest end date
+        let sorted = data.sort((a, b) => {
+          if (a.isTrending && !b.isTrending) return -1;
+          if (!a.isTrending && b.isTrending) return 1;
+          
+          if (a.endDate && b.endDate) {
+            return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
+          }
+          return 0;
+        });
+
+        // Map joined state if we have a current user
+        if (this.currentUserId) {
+          this.challengeService.getJoinedChallengeIds(this.currentUserId).subscribe({
+            next: (joinedIds) => {
+              this.challenges = sorted.map(ch => ({
+                ...ch,
+                isJoined: ch.challengeId ? joinedIds.includes(ch.challengeId) : false
+              }));
+            },
+            error: (err) => {
+              console.error('Error fetching joined challenges', err);
+              this.challenges = sorted;
+            }
+          });
+        } else {
+          this.challenges = sorted;
+        }
+      },
+      error: (err) => {
+        console.error('Error loading challenges:', err);
+      }
+    });
+  }
+
+  joinChallengeAction(challenge: Challenge): void {
+    if (!this.currentUserId || !challenge.challengeId || challenge.isJoined) return;
+
+    challenge.isJoined = true;
+    challenge.participantsCount = (challenge.participantsCount || 0) + 1;
+    this.challengeService.joinChallenge(challenge.challengeId, this.currentUserId).subscribe({
+      next: () => {},
+      error: (err) => {
+        console.error('Failed to join challenge', err);
+        challenge.isJoined = false;
+        challenge.participantsCount!--;
+      }
+    });
+  }
+
+  getDaysLeft(endDate: string | Date | undefined): string {
+    if (!endDate) return 'No limit';
+    
+    const end = new Date(endDate);
+    const now = new Date();
+    const diffMs = end.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+    
+    if (diffDays < 0) return 'Ended';
+    if (diffDays === 0) return 'Ends today';
+    if (diffDays === 1) return '1 day';
+    
+    return `${diffDays} days`;
   }
 
   loadPosts(): void {

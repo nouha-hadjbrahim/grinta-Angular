@@ -198,14 +198,14 @@
   font-size: 1.2rem;
 }
 
-.reward .label, .time-left .label {
+.reward .label, .time-left .label, .target-value .label {
   display: block;
   font-size: 0.75rem;
   color: #888;
   margin-bottom: 2px;
 }
 
-.reward .value {
+.reward .value, .target-value .value {
   font-size: 0.85rem;
   font-weight: 600;
 }
@@ -614,4 +614,40 @@
   .challenges-grid {
     grid-template-columns: 1fr;
   }
+}
+.challenge-join-btn {
+  margin-top: 15px;
+  display: flex;
+  justify-content: stretch;
+}
+
+.btn-join-challenge {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #fdb813;
+  background-color: transparent;
+  color: #fdb813;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-join-challenge:hover {
+  background-color: rgba(253, 184, 19, 0.1);
+}
+
+.btn-join-challenge.joined {
+  background-color: #fdb813;
+  color: #111;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.btn-join-challenge.joined:hover {
+  background-color: #fdb813;
 }

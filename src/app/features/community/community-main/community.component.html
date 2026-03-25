@@ -22,155 +22,63 @@
 
       <!-- Challenges Grid -->
       <div class="challenges-grid">
-        <!-- Challenge Card 1 (Trending) -->
-        <div class="challenge-card trending">
-          <div class="trending-badge">
+
+        <!-- Dynamic Challenge Cards -->
+        <div class="challenge-card" *ngFor="let challenge of challenges" [class.trending]="challenge.isTrending">
+          <div class="trending-badge" *ngIf="challenge.isTrending">
             <i class="fa fa-bolt"></i> TRENDING CHALLENGE
           </div>
+          
           <div class="challenge-main">
-            <div class="challenge-icon icon-yellow">
-              <i class="fa fa-trophy"></i>
+            <div class="challenge-icon" [ngClass]="challenge.isTrending ? 'icon-yellow' : 'icon-white'">
+              <i class="fa" [ngClass]="{
+                'fa-dumbbell': challenge.type === 'FITNESS',
+                'fa-apple-alt': challenge.type === 'NUTRITION',
+                'fa-walking': challenge.type === 'STEPS',
+                'fa-trophy': !['FITNESS', 'NUTRITION', 'STEPS'].includes(challenge.type)
+              }"></i>
             </div>
             <div class="challenge-info">
-              <h3>30-Day Workout Streak</h3>
-              <p>Complete a workout every day for 30 days straight</p>
-              <span class="participants"><i class="fa fa-users"></i> 1,247 joined</span>
+              <h3>{{ challenge.title }}</h3>
+              <p>{{ challenge.description }}</p>
+              <span class="participants"><i class="fa fa-users"></i> {{ challenge.participantsCount || 0 }} joined</span>
             </div>
           </div>
-          <div class="challenge-progress-section">
-            <div class="progress-labels">
-              <span>Your Progress</span>
-              <span class="progress-count text-yellow">12 / 30</span>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill fill-yellow" style="width: 40%;"></div>
-            </div>
-          </div>
-          <div class="challenge-footer">
+          
+          <div class="challenge-footer" style="padding-top: 5px; border-top: none;">
             <div class="reward">
-              <i class="fa fa-medal text-yellow"></i>
+              <i class="fa fa-medal" [ngClass]="challenge.isTrending ? 'text-yellow' : 'text-white'"></i>
               <div>
                 <span class="label">Reward</span>
-                <span class="value">Gold Badge + 500 Points</span>
+                <span class="value">{{ challenge.reward || 'No reward' }}</span>
               </div>
+            </div>
+          </div>
+
+          <div class="challenge-footer">
+            <div class="target-value">
+              <span class="label">Target</span>
+              <span class="value text-yellow">{{ challenge.targetValue }}</span>
             </div>
             <div class="time-left text-red">
               <span class="label">Time Left</span>
-              <span class="value">18 days</span>
+              <span class="value">{{ getDaysLeft(challenge.endDate) }}</span>
             </div>
+          </div>
+
+          <div class="challenge-join-btn">
+            <button class="btn-join-challenge" [ngClass]="{'joined': challenge.isJoined}" (click)="joinChallengeAction(challenge)" [disabled]="challenge.isJoined">
+              <i class="fa" [ngClass]="challenge.isJoined ? 'fa-check' : 'fa-plus'"></i>
+              {{ challenge.isJoined ? 'Already joined' : 'Join Challenge' }}
+            </button>
           </div>
         </div>
 
-        <!-- Challenge Card 2 -->
-        <div class="challenge-card">
-          <div class="challenge-main">
-            <div class="challenge-icon icon-white">
-              <i class="fa fa-trophy"></i>
-            </div>
-            <div class="challenge-info">
-              <h3>10K Steps Daily Champion</h3>
-              <p>Walk 10,000 steps every day this week</p>
-              <span class="participants"><i class="fa fa-users"></i> 892 joined</span>
-            </div>
-          </div>
-          <div class="challenge-progress-section">
-            <div class="progress-labels">
-              <span>Your Progress</span>
-              <span class="progress-count text-yellow">4 / 7</span>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill fill-yellow" style="width: 57%;"></div>
-            </div>
-          </div>
-          <div class="challenge-footer">
-            <div class="reward">
-              <i class="fa fa-medal text-white"></i>
-              <div>
-                <span class="label">Reward</span>
-                <span class="value">Step Master Badge</span>
-              </div>
-            </div>
-            <div class="time-left text-red">
-              <span class="label">Time Left</span>
-              <span class="value">3 days</span>
-            </div>
-          </div>
+        <!-- If no challenges available -->
+        <div *ngIf="challenges.length === 0" style="grid-column: span 2; text-align: center; color: #aaa; padding: 20px;">
+          No active challenges available right now!
         </div>
 
-        <!-- Challenge Card 3 (Trending) -->
-        <div class="challenge-card trending">
-          <div class="trending-badge">
-            <i class="fa fa-bolt"></i> TRENDING CHALLENGE
-          </div>
-          <div class="challenge-main">
-            <div class="challenge-icon icon-yellow">
-              <i class="fa fa-trophy"></i>
-            </div>
-            <div class="challenge-info">
-              <h3>Protein Goal Master</h3>
-              <p>Hit your daily protein target for 14 consecutive days</p>
-              <span class="participants"><i class="fa fa-users"></i> 654 joined</span>
-            </div>
-          </div>
-          <div class="challenge-progress-section">
-            <div class="progress-labels">
-              <span>Your Progress</span>
-              <span class="progress-count text-yellow">8 / 14</span>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill fill-yellow" style="width: 57%;"></div>
-            </div>
-          </div>
-          <div class="challenge-footer">
-            <div class="reward">
-              <i class="fa fa-medal text-yellow"></i>
-              <div>
-                <span class="label">Reward</span>
-                <span class="value">Nutrition Pro Badge</span>
-              </div>
-            </div>
-            <div class="time-left text-red">
-              <span class="label">Time Left</span>
-              <span class="value">6 days</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Challenge Card 4 -->
-        <div class="challenge-card">
-          <div class="challenge-main">
-            <div class="challenge-icon icon-white">
-              <i class="fa fa-trophy"></i>
-            </div>
-            <div class="challenge-info">
-              <h3>5K Run Challenge</h3>
-              <p>Complete a 5K run under 30 minutes</p>
-              <span class="participants"><i class="fa fa-users"></i> 428 joined</span>
-            </div>
-          </div>
-          <div class="challenge-progress-section">
-            <div class="progress-labels">
-              <span>Your Progress</span>
-              <span class="progress-count text-yellow">1 / 1</span>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill fill-yellow" style="width: 100%;"></div>
-            </div>
-          </div>
-          <div class="challenge-footer">
-            <div class="reward">
-              <i class="fa fa-medal text-white"></i>
-              <div>
-                <span class="label">Reward</span>
-                <span class="value">Runner Badge</span>
-              </div>
-            </div>
-            <div class="time-left text-red">
-              <span class="label">Time Left</span>
-              <span class="value">10 days</span>
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- Feed Section -->
