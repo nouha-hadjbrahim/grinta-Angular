@@ -23,6 +23,8 @@ import { BookingsComponent } from './features/bookings/bookings-main/bookings.co
 import { NutritionComponent } from './features/nutrition/nutrition-main/nutrition.component';
 import { CommunityComponent } from './features/community/community-main/community.component';
 import { WorkoutsComponent } from './features/workouts/workouts-main/workouts.component';
+import { ProgramDetailComponent } from './features/workouts/program-detail/program-detail.component';
+import { ExerciseDetailComponent } from './features/workouts/exercise-detail/exercise-detail.component';
 import { PaymentComponent } from './features/bookings/payment/payment.component';
 import { PaymentSuccessComponent } from './features/bookings/payment-success/payment-success.component';
 import { PaymentFailComponent } from './features/bookings/payment-fail/payment-fail.component';
@@ -45,6 +47,8 @@ import { SignUpComponent } from './sign-up/sign-up.component';
     CoachingComponent,
     BookingsComponent,
     WorkoutsComponent,
+    ProgramDetailComponent,
+    ExerciseDetailComponent,
     NutritionComponent,
     CommunityComponent,
     PaymentComponent,

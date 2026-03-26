@@ -1,0 +1,285 @@
+.exercise-detail-container {
+  padding: 40px;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header */
+.detail-header {
+  margin-bottom: 30px;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #E63946;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  transition: opacity 0.3s;
+  font-weight: 600;
+}
+
+.back-btn:hover {
+  opacity: 0.8;
+}
+
+.back-btn i {
+  font-size: 0.9rem;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.exercise-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin: 0;
+  color: #fff;
+}
+
+/* Error */
+.error-message {
+  background-color: rgba(230, 57, 70, 0.1);
+  border: 1px solid #E63946;
+  color: #ff6b7a;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.error-message p {
+  margin: 0;
+}
+
+/* Video Section */
+.video-section {
+  margin-bottom: 40px;
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  background-color: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.video-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #1e1e1e;
+  font-size: 3rem;
+  color: #666;
+  gap: 10px;
+}
+
+.video-placeholder p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Content Grid */
+.content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+}
+
+/* Sections */
+.section-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0 0 20px 0;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Instructions */
+.instructions-section {
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 25px;
+}
+
+.instructions-list {
+  list-style: decimal;
+  margin: 0;
+  padding-left: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.instruction-item {
+  color: #ddd;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* Target Muscles */
+.target-muscles-section {
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+}
+
+.muscles-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.muscle-badge {
+  background-color: #E63946;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 24px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid #ff5560;
+}
+
+/* Exercise Meta */
+.exercise-meta-section {
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 25px;
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.meta-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.meta-card {
+  background-color: #252525;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 15px;
+  text-align: center;
+}
+
+.meta-label {
+  font-size: 0.8rem;
+  color: #999;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.meta-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #E63946;
+}
+
+/* Loading State */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  min-height: 600px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #333;
+  border-top-color: #E63946;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .exercise-meta-section {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .exercise-title {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .exercise-detail-container {
+    padding: 20px;
+  }
+
+  .exercise-title {
+    font-size: 1.3rem;
+  }
+
+  .content-grid {
+    gap: 20px;
+  }
+
+  .instructions-section,
+  .target-muscles-section,
+  .exercise-meta-section {
+    padding: 15px;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+  }
+
+  .instruction-item {
+    font-size: 0.9rem;
+  }
+}

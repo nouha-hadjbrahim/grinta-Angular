@@ -17,6 +17,8 @@ import { CommunityComponent } from './features/community/community-main/communit
 import { PaymentComponent } from './features/bookings/payment/payment.component';
 import { PaymentSuccessComponent } from './features/bookings/payment-success/payment-success.component';
 import { PaymentFailComponent } from './features/bookings/payment-fail/payment-fail.component';
+import { ProgramDetailComponent } from './features/workouts/program-detail/program-detail.component';
+import { ExerciseDetailComponent } from './features/workouts/exercise-detail/exercise-detail.component';
 import { AuthGuard } from './guards/auth.guard';
 import { RoleGuard } from './guards/role.guard';
 
@@ -34,6 +36,8 @@ const routes: Routes = [
       { path: 'events/edit/:id', component: EventEditComponent },
       { path: 'events/:id', component: EventDetailComponent },
       { path: 'workouts', component: WorkoutsComponent },
+      { path: 'workouts/program/:id', component: ProgramDetailComponent },
+      { path: 'workouts/exercise/:id', component: ExerciseDetailComponent },
       { path: 'gyms', component: GymsComponent },
       { path: 'coaching', component: CoachingComponent },
       { path: 'bookings', component: BookingsComponent },

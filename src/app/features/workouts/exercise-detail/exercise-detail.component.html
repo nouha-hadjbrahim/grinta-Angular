@@ -1,0 +1,82 @@
+<div class="exercise-detail-container" *ngIf="!loading else loadingState">
+  <!-- Header -->
+  <div class="detail-header">
+    <button class="back-btn" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Back
+    </button>
+
+    <div class="header-content" *ngIf="exercise as ex">
+      <h1 class="exercise-title">{{ ex.name }}</h1>
+    </div>
+  </div>
+
+  <div class="error-message" *ngIf="error">
+    <p>{{ error }}</p>
+  </div>
+
+  <ng-container *ngIf="exercise as ex">
+    <!-- Video Section -->
+    <div class="video-section">
+      <div class="video-container">
+        <iframe
+          *ngIf="videoUrl"
+          [src]="videoUrl"
+          width="100%"
+          height="100%"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+        <div class="video-placeholder" *ngIf="!videoUrl">
+          <i class="fas fa-video"></i>
+          <p>Video not available</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="content-grid">
+      <!-- Instructions -->
+      <div class="instructions-section">
+        <h2 class="section-title">Instructions</h2>
+        <ol class="instructions-list">
+          <li *ngFor="let instruction of ex.instructions" class="instruction-item">
+            {{ instruction }}
+          </li>
+        </ol>
+      </div>
+
+      <!-- Target Muscles -->
+      <div class="target-muscles-section">
+        <h2 class="section-title">Target Muscles</h2>
+        <div class="muscles-grid">
+          <span class="muscle-badge" *ngFor="let muscle of ex.targetMuscles">
+            {{ muscle | titlecase }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Exercise Meta -->
+      <div class="exercise-meta-section">
+        <h2 class="section-title">Exercise Details</h2>
+        <div class="meta-cards">
+          <div class="meta-card">
+            <div class="meta-label">Sets</div>
+            <div class="meta-value">{{ ex.sets }}</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Reps</div>
+            <div class="meta-value">{{ ex.reps }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<ng-template #loadingState>
+  <div class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading exercise...</p>
+  </div>
+</ng-template>

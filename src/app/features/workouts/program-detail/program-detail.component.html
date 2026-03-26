@@ -1,0 +1,83 @@
+<div class="program-detail-container" *ngIf="!loading else loadingState">
+  <!-- Header -->
+  <div class="detail-header">
+    <button class="back-btn" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Back to Builder
+    </button>
+
+    <div class="header-content" *ngIf="program as p">
+      <h1 class="program-title">{{ p.name }}</h1>
+      <div class="header-meta">
+        <span class="difficulty-badge" [style.backgroundColor]="getDifficultyBgColor()" [style.color]="getDifficultyColor()">
+          {{ p.difficulty | titlecase }}
+        </span>
+        <span class="duration-badge">
+          <i class="fas fa-clock"></i>
+          {{ p.duration.min }}-{{ p.duration.max }} min
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="error-message" *ngIf="error">
+    <p>{{ error }}</p>
+  </div>
+
+  <ng-container *ngIf="program as p">
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Progress</div>
+        <div class="stat-value">{{ getProgressPercentage() }}%</div>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="getProgressPercentage()"></div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Calories Burned</div>
+        <div class="stat-value">{{ p.caloriesBurned.current }}/{{ p.caloriesBurned.total }} kcal</div>
+        <div class="stat-small">{{ p.caloriesBurned.total > 0 ? ((p.caloriesBurned.current / p.caloriesBurned.total) * 100 | number:'1.0-0') : 0 }}% completed</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Exercises</div>
+        <div class="stat-value">{{ getCompletedCount() }}/{{ p.exercises.length }} Completed</div>
+        <div class="stat-small">{{ p.exercises.length > 0 ? ((getCompletedCount() / p.exercises.length) * 100 | number:'1.0-0') : 0 }}% done</div>
+      </div>
+    </div>
+
+    <!-- Exercise List -->
+    <div class="exercises-section">
+      <h2 class="section-title">Exercises</h2>
+
+      <div class="exercise-list">
+        <div class="exercise-item" *ngFor="let exercise of p.exercises" [class.completed]="exercise.completed">
+          <input
+            type="checkbox"
+            class="exercise-checkbox"
+            [checked]="exercise.completed || false"
+            (change)="toggleExerciseCompletion(exercise)"
+            [id]="'ex-' + exercise.id"
+          />
+
+          <label [for]="'ex-' + exercise.id" class="exercise-content">
+            <div class="exercise-name">{{ exercise.name }}</div>
+            <div class="exercise-meta">{{ exercise.sets }} sets × {{ exercise.reps }} reps</div>
+          </label>
+
+          <button class="play-btn" (click)="openExerciseDetail(exercise)" title="View exercise video">
+            <i class="fas fa-play"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<ng-template #loadingState>
+  <div class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading program...</p>
+  </div>
+</ng-template>

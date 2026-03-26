@@ -1,1 +1,218 @@
-<p>workouts works!</p>
+<div class="workouts-container">
+  <!-- Hero Section -->
+  <div class="workouts-hero">
+    <h1 class="hero-title">Workout <span class="text-red">Builder</span></h1>
+    <p class="hero-subtitle">Select your focus and let us build your perfect workout</p>
+  </div>
+
+  <!-- Main Layout -->
+  <div class="workouts-layout">
+    <!-- Left Main Column -->
+    <div class="main-column">
+
+      <!-- Muscle Selection -->
+      <div class="selection-section">
+        <h2 class="section-title">Select <span class="text-red">Muscles</span></h2>
+        <div class="items-grid">
+          <div
+            class="item-card"
+            *ngFor="let muscle of muscles"
+            [class.selected]="selectedMuscles.has(muscle)"
+            (click)="toggleMuscle(muscle)">
+            <img [src]="'assets/muscles/' + muscle + '.png'" [alt]="muscle">
+            <span class="item-label">{{ muscle | titlecase }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Equipment Selection -->
+      <div class="selection-section">
+        <h2 class="section-title">Select <span class="text-red">Equipment</span></h2>
+        <div class="items-grid">
+          <div
+            class="item-card"
+            *ngFor="let equipment of equipments"
+            [class.selected]="selectedEquipment.has(equipment)"
+            (click)="toggleEquipment(equipment)">
+            <img [src]="'assets/equipments/' + equipment + '.png'" [alt]="equipment">
+            <span class="item-label">{{ equipment | titlecase }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Available Programs Section -->
+      <div class="programs-section">
+        <h2 class="section-title">Your <span class="text-red">Programs</span></h2>
+
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="!generatedPrograms && !loading">
+          <i class="fa fa-inbox"></i>
+          <p>Select muscles and equipment to generate your workout programs</p>
+        </div>
+
+        <!-- Error State -->
+        <div class="error-state" *ngIf="error && !loading">
+          <i class="fa fa-exclamation-circle"></i>
+          <p>{{ error }}</p>
+        </div>
+
+        <!-- Programs Grid — three cards rendered from backend response -->
+        <ng-container *ngIf="generatedPrograms as gp">
+          <div class="programs-grid">
+
+            <!-- Beginner Card -->
+            <div class="program-card difficulty-beginner" *ngIf="gp.beginner?.length">
+              <div class="program-header">
+                <div class="header-info">
+                  <h3>Beginner</h3>
+                  <span class="difficulty-badge difficulty-beginner">Beginner</span>
+                </div>
+                <div class="header-meta">
+                  <span class="duration">30–40 min</span>
+                </div>
+              </div>
+              <div class="exercises-preview">
+                <div class="preview-label">Exercises ({{ gp.beginner.length }})</div>
+                <ul class="preview-list">
+                  <li *ngFor="let ex of gp.beginner.slice(0, 3)">{{ ex.name }}</li>
+                  <li *ngIf="gp.beginner.length > 3" class="more-items">
+                    +{{ gp.beginner.length - 3 }} more
+                  </li>
+                </ul>
+              </div>
+              <button
+                class="btn-select-program"
+                (click)="selectProgram('beginner')"
+                [disabled]="isProgramSelected('beginner')">
+                <i class="fa" [ngClass]="isProgramSelected('beginner') ? 'fa-check' : 'fa-plus'"></i>
+                {{ isProgramSelected('beginner') ? 'Selected' : 'Select Program' }}
+              </button>
+            </div>
+
+            <!-- Intermediate Card -->
+            <div class="program-card difficulty-intermediate" *ngIf="gp.intermediate?.length">
+              <div class="program-header">
+                <div class="header-info">
+                  <h3>Intermediate</h3>
+                  <span class="difficulty-badge difficulty-intermediate">Intermediate</span>
+                </div>
+                <div class="header-meta">
+                  <span class="duration">45–55 min</span>
+                </div>
+              </div>
+              <div class="exercises-preview">
+                <div class="preview-label">Exercises ({{ gp.intermediate.length }})</div>
+                <ul class="preview-list">
+                  <li *ngFor="let ex of gp.intermediate.slice(0, 3)">{{ ex.name }}</li>
+                  <li *ngIf="gp.intermediate.length > 3" class="more-items">
+                    +{{ gp.intermediate.length - 3 }} more
+                  </li>
+                </ul>
+              </div>
+              <button
+                class="btn-select-program"
+                (click)="selectProgram('intermediate')"
+                [disabled]="isProgramSelected('intermediate')">
+                <i class="fa" [ngClass]="isProgramSelected('intermediate') ? 'fa-check' : 'fa-plus'"></i>
+                {{ isProgramSelected('intermediate') ? 'Selected' : 'Select Program' }}
+              </button>
+            </div>
+
+            <!-- Advanced Card -->
+            <div class="program-card difficulty-advanced" *ngIf="gp.advanced?.length">
+              <div class="program-header">
+                <div class="header-info">
+                  <h3>Advanced</h3>
+                  <span class="difficulty-badge difficulty-advanced">Advanced</span>
+                </div>
+                <div class="header-meta">
+                  <span class="duration">60–75 min</span>
+                </div>
+              </div>
+              <div class="exercises-preview">
+                <div class="preview-label">Exercises ({{ gp.advanced.length }})</div>
+                <ul class="preview-list">
+                  <li *ngFor="let ex of gp.advanced.slice(0, 3)">{{ ex.name }}</li>
+                  <li *ngIf="gp.advanced.length > 3" class="more-items">
+                    +{{ gp.advanced.length - 3 }} more
+                  </li>
+                </ul>
+              </div>
+              <button
+                class="btn-select-program"
+                (click)="selectProgram('advanced')"
+                [disabled]="isProgramSelected('advanced')">
+                <i class="fa" [ngClass]="isProgramSelected('advanced') ? 'fa-check' : 'fa-plus'"></i>
+                {{ isProgramSelected('advanced') ? 'Selected' : 'Select Program' }}
+              </button>
+            </div>
+
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="sidebar-column">
+      <div class="sidebar-card active-programs-card">
+        <h3 class="card-title">Active <span class="text-red">Programs</span></h3>
+
+        <!-- Empty State -->
+        <div class="card-empty-state" *ngIf="activePrograms.length === 0">
+          <i class="fa fa-inbox"></i>
+          <p>No active programs</p>
+        </div>
+
+        <!-- Programs List -->
+        <div class="programs-list" *ngIf="activePrograms.length > 0">
+          <div class="active-program-item" *ngFor="let program of activePrograms; let idx = index">
+            <div class="program-header-info">
+              <div class="program-name">{{ program.name }}</div>
+              <span class="difficulty-badge-small" [ngClass]="getDifficultyClass(program)">
+                {{ program.difficulty | slice:0:1 | uppercase }}
+              </span>
+            </div>
+
+            <div class="progress-section">
+              <div class="progress-labels">
+                <span class="label">Progress</span>
+                <span class="value">{{ program.progress }}%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="program.progress"></div>
+              </div>
+            </div>
+
+            <div class="program-stats">
+              <div class="stat">
+                <span class="stat-label">Exercises</span>
+                <span class="stat-value">{{ getCompletedExercises(idx) }}/{{ program.exercises.length }}</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Calories</span>
+                <span class="stat-value">{{ program.caloriesBurned.current }}/{{ program.caloriesBurned.total }}</span>
+              </div>
+            </div>
+
+            <div class="program-actions">
+              <button class="btn-continue" (click)="openProgram(program)">
+                <i class="fa fa-play"></i> Continue
+              </button>
+              <button class="btn-delete" (click)="removeProgram(idx)" title="Delete program">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" *ngIf="loading">
+  <div class="spinner">
+    <i class="fa fa-spinner fa-spin"></i>
+    <p>Generating programs...</p>
+  </div>
+</div>
